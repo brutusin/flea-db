@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.brutusin</groupId>
+        <artifactId>brutusin</artifactId>
+        <version>1.0.1</version>
+    </parent>
+    <groupId>org.brutusin</groupId>
+    <artifactId>flea-db</artifactId>
+    <packaging>jar</packaging>   
+    <version>1.0.0-SNAPSHOT</version>
+    <name>${project.groupId}:${project.artifactId}</name>
+    <description>A tiny, embeddable, schema-full, JSON database</description>
+    <url>https://github.com/brutusin/flea-db</url>
+    
+    <properties>
+        <lucene.version>4.10.3</lucene.version>
+    </properties>
+    
+    <issueManagement>
+        <system>GitHub Issues</system>
+        <url>https://github.com/brutusin/flea-db/issues</url>
+    </issueManagement>
+	
+    <ciManagement>
+        <system>travis-ci</system>
+        <url>https://travis-ci.org/brutusin/flea-db</url>
+    </ciManagement>
+	
+    <scm>
+        <url>https://github.com/brutusin/flea-db</url>
+        <connection>scm:git:https://github.com/brutusin/flea-db.git</connection>
+        <developerConnection>scm:git:https://github.com/brutusin/flea-db.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+	
+    <dependencies>
+        <dependency>
+            <groupId>org.brutusin</groupId>
+            <artifactId>json-codec-jackson</artifactId>
+            <version>1.0.5-SNAPSHOT</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>   
+        </dependency>
+        <dependency>
+            <groupId>org.brutusin</groupId>
+            <artifactId>commons</artifactId>
+            <version>1.2.7-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-facet</artifactId>
+            <version>${lucene.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.lucene</groupId>
+            <artifactId>lucene-analyzers-common</artifactId>
+            <version>${lucene.version}</version>
+        </dependency>
+    </dependencies>
+    <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>**/*</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
+</project>
