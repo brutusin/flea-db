@@ -1,10 +1,24 @@
+/*
+ * Copyright 2015 Ignacio del Valle Alles idelvall@brutusin.org.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package org.brutusin.fleadb.impl;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.DoubleField;
 import org.apache.lucene.document.Field;
@@ -14,6 +28,7 @@ import org.apache.lucene.document.StringField;
 import org.apache.lucene.facet.FacetField;
 import org.apache.lucene.index.IndexableField;
 import org.brutusin.commons.Pair;
+import org.brutusin.commons.json.impl.LazyJsonNode;
 import org.brutusin.commons.json.spi.JsonCodec;
 import org.brutusin.commons.json.spi.JsonNode;
 import org.brutusin.commons.json.spi.JsonSchema;
@@ -21,7 +36,11 @@ import org.brutusin.fleadb.DocTransformer;
 import org.brutusin.fleadb.Schema;
 import org.brutusin.fleadb.utils.Expression;
 
-public class FleaTransformer implements DocTransformer<String> {
+/**
+ *
+ * @author Ignacio del Valle Alles idelvall@brutusin.org
+ */
+public class FleaTransformer implements DocTransformer<JsonNode> {
 
     private static final FieldType NON_INDEXED_TYPE = new FieldType();
     private static final String OBJECT_FIELD_NAME = "$json";
@@ -47,16 +66,14 @@ public class FleaTransformer implements DocTransformer<String> {
         }
     }
 
-    public Pair<Document, List<FacetField>> entityToDocument(String entity) {
-        if (entity == null) {
+    public Pair<Document, List<FacetField>> entityToDocument(JsonNode jsonNode) {
+        if (jsonNode == null) {
             return null;
         }
-        JsonNode jsonNode;
         try {
-            jsonNode = JsonCodec.getInstance().parse(entity);
             jsonSchema.validate(jsonNode);
         } catch (Exception e) {
-            throw new RuntimeException("Error transforming entity: " + entity, e);
+            throw new RuntimeException("Error transforming entity: " + jsonNode, e);
         }
         Document doc = new Document();
         doc.add(new Field(OBJECT_FIELD_NAME, jsonNode.toString(), NON_INDEXED_TYPE));
@@ -86,20 +103,24 @@ public class FleaTransformer implements DocTransformer<String> {
             String indexField = entry.getKey();
             Expression exp = Expression.compile(indexField);
             JsonNode projectedNode = exp.projectNode(jsonNode);
-            addLuceneValues(indexField, indexFields, projectedNode);
+            if (projectedNode != null) {
+                addLuceneIndexFields(indexField, indexFields, projectedNode, exp.projectSchema(jsonSchema));
+            }
         }
-        
-        Set<String> facetFields = this.schema.getFacetFields();
-        for (String facetField : facetFields) {
+
+        Map<String, Boolean> facetFields = this.schema.getFacetFields();
+        for (String facetField : facetFields.keySet()) {
             Expression exp = Expression.compile(facetField);
             JsonNode projectedNode = exp.projectNode(jsonNode);
-            addLuceneFacets(facetField, facets, projectedNode);
+            if (projectedNode != null) {
+                addLuceneFacets(facetField, facets, projectedNode);
+            }
         }
         return ret;
     }
-    
+
     private void addLuceneFacets(String facetField, List<FacetField> list, JsonNode node) {
-         JsonNode.Type type = node.getNodeType();
+        JsonNode.Type type = node.getNodeType();
         if (type == JsonNode.Type.ARRAY) {
             for (int i = 0; i < node.getSize(); i++) {
                 addLuceneFacets(facetField, list, node.get(i));
@@ -119,11 +140,11 @@ public class FleaTransformer implements DocTransformer<String> {
         }
     }
 
-    private void addLuceneValues(String indexField, List<IndexableField> list, JsonNode node) {
-        JsonNode.Type type = node.getNodeType();
+    private void addLuceneIndexFields(String indexField, List<IndexableField> list, JsonNode node, JsonSchema nodeSchema) {
+        JsonNode.Type type = nodeSchema.getSchemaType();
         if (type == JsonNode.Type.ARRAY) {
             for (int i = 0; i < node.getSize(); i++) {
-                addLuceneValues(indexField, list, node.get(i));
+                addLuceneIndexFields(indexField, list, node.get(i), nodeSchema.getItemSchema());
             }
         } else if (type == JsonNode.Type.OBJECT) {
             Iterator<String> properties = node.getProperties();
@@ -145,7 +166,7 @@ public class FleaTransformer implements DocTransformer<String> {
         }
     }
 
-    public String documentToEntity(Document doc) {
-        return doc.get(OBJECT_FIELD_NAME);
+    public JsonNode documentToEntity(Document doc) {
+        return new LazyJsonNode(doc.get(OBJECT_FIELD_NAME));
     }
 }

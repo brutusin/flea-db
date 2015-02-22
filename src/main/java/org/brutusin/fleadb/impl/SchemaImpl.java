@@ -15,7 +15,6 @@
  */
 package org.brutusin.fleadb.impl;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -41,37 +40,52 @@ import org.brutusin.fleadb.Schema;
  */
 public class SchemaImpl implements Schema {
 
-    private final JsonSchema schemaNode;
+    private final JsonSchema jsonSchema;
     private Map<String, JsonNode.Type> indexFields;
-    private Set<String> facetFields;
+    private Map<String, Boolean> facetFields;
 
-    public SchemaImpl(String definition) throws ParseException {
-        this.schemaNode = JsonCodec.getInstance().parseSchema(definition);
+    public SchemaImpl(JsonSchema jsonSchema) throws ParseException {
+        this.jsonSchema = jsonSchema;
         initFields();
     }
 
+    @Override
     public String getJSONSChema() {
-        return this.schemaNode.toString();
+        return this.jsonSchema.toString();
     }
 
-    public Set<String> getFacetFields() {
-        return facetFields;
+    public void setFacetFields(Map<String, Boolean> facetFields) {
+        this.facetFields = facetFields;
     }
 
+    @Override
     public Map<String, JsonNode.Type> getIndexFields() {
         return indexFields;
     }
 
+    @Override
+    public Map<String, Boolean> getFacetFields() {
+       return facetFields;
+    }
+    
     private void initFields() {
         this.indexFields = new LinkedHashMap();
-        this.facetFields = new LinkedHashSet();
+        this.facetFields = new LinkedHashMap();
 
-        accept(schemaNode, new JsonNodeVisitor() {
+        accept(jsonSchema, new JsonNodeVisitor() {
 
             private void add(String name, JsonNode.Type type, IndexableProperty.IndexMode mode) {
                 SchemaImpl.this.indexFields.put(name, type);
                 if (mode == IndexableProperty.IndexMode.facet) {
-                    SchemaImpl.this.facetFields.add(name);
+                    boolean multievaluated = name.contains("[*]") || name.contains("[#]");
+                    SchemaImpl.this.facetFields.put(name, multievaluated);
+                }
+            }
+
+            private void add(String name, JsonNode.Type type, IndexableProperty.IndexMode mode, boolean multievaluated) {
+                SchemaImpl.this.indexFields.put(name, type);
+                if (mode == IndexableProperty.IndexMode.facet) {
+                    SchemaImpl.this.facetFields.put(name, multievaluated);
                 }
             }
 
@@ -85,10 +99,10 @@ public class SchemaImpl implements Schema {
                         JsonNode.Type valueType = JsonSchemaUtils.getMapValueType(schema);
                         if (valueType != null) {
                             if (valueType != JsonNode.Type.OBJECT) {
-                                add(name, JsonNode.Type.STRING, mode);
+                                add(name, JsonNode.Type.STRING, mode, true);
                                 add(name + "[*]", valueType, mode);
                             } else {
-                                add(name, JsonNode.Type.STRING, mode);
+                                add(name, JsonNode.Type.STRING, mode, true);
                             }
                         }
                     } else if (type == JsonNode.Type.ARRAY) {
@@ -186,7 +200,7 @@ public class SchemaImpl implements Schema {
 
     public static void main(String[] args) throws Exception {
         // SchemaImpl s = new SchemaImpl("{\"type\":\"object\",\"properties\":{\"map\":{\"type\":\"object\",\"index\":\"index\",\"additionalProperties\":{\"type\":\"boolean\"}},\"firstName\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"properties\":{\"aaa\":{\"type\":\"string\"},\"bbb\":{\"type\":\"object\",\"additionalProperties\":{\"type\":\"string\",\"index\":\"facet\"}}}}},\"middleName\":{\"type\":\"string\",\"index\":\"index\"},\"lastName\":{\"type\":\"string\"}},\"required\":[\"firstName\",\"lastName\"],\"additionalProperties\":false}");
-        SchemaImpl s = new SchemaImpl(JsonCodec.getInstance().getSchemaString(TestClass.class));
+        SchemaImpl s = new SchemaImpl(JsonCodec.getInstance().parseSchema(JsonCodec.getInstance().getSchemaString(TestClass.class)));
         System.out.println(s.getJSONSChema());
         System.out.println("Index:");
         Map<String, JsonNode.Type> indexFields1 = s.getIndexFields();
@@ -197,14 +211,12 @@ public class SchemaImpl implements Schema {
             System.out.println(name + ":" + type);
         }
         System.out.println("Facet:");
-        Set<String> facetFields1 = s.getFacetFields();
-        for (String facet : facetFields1) {
-            System.out.println(facet);
-        }
+        Map<String, Boolean> facetFields1 = s.getFacetFields();
+        System.out.println(facetFields1);
         System.out.println("---");
         JsonNode node = JsonCodec.getInstance().parse("{\"map\":{\"aa\":{\"int1\":3,\"booleanMap\":{\"key1\":true},\"s1\":\"s11Value\",\"s2\":[\"s2Value11\",\"s2Value21\"]},\"bb\":{\"booleanMap\":{\"key2\":false},\"s1\":\"s12Value\",\"s2\":[\"s2Value12\",\"s2Value22\"]}}}{\"map\":{\"aa\":{\"booleanMap\":{\"key1\":true},\"s1\":\"s11Value\",\"s2\":[\"s2Value11\",\"s2Value21\"]},\"bb\":{\"booleanMap\":{\"key2\":false},\"s1\":\"s12Value\",\"s2\":[\"s2Value12\",\"s2Value22\"]}}}");
         FleaTransformer transformer = new FleaTransformer(s);
-        Pair<Document, List<FacetField>> entityToDocument = transformer.entityToDocument(node.toString());
+        Pair<Document, List<FacetField>> entityToDocument = transformer.entityToDocument(node);
         System.out.println(entityToDocument);
     }
 
@@ -215,7 +227,7 @@ public class SchemaImpl implements Schema {
         private String[] s2;
         @IndexableProperty(mode = IndexableProperty.IndexMode.facet)
         private Map<String, Boolean> booleanMap;
-        
+
         @IndexableProperty
         private int int1;
 

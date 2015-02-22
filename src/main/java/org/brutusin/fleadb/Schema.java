@@ -21,26 +21,30 @@ import org.brutusin.commons.json.spi.JsonNode;
 
 /**
  * Flea-db database schema.
- * 
+ *
  * @author Ignacio del Valle Alles idelvall@brutusin.org
  */
 public interface Schema {
 
     /**
      * Returns the JSON-Schema governing the structure of the records
-     * @return 
+     *
+     * @return
      */
     public String getJSONSChema();
 
     /**
-     * Returns the lucene index field names, that can be used in queries
-     * @return 
+     * Returns the lucene index field names and their type, that can be used in
+     * queries
+     *
+     * @return
      */
     public Map<String, JsonNode.Type> getIndexFields();
 
     /**
-     * Returns the lucene facet names
-     * @return 
+     * Returns the lucene facet names, and if they are multievaluated
+     *
+     * @return
      */
-    public Set<String> getFacetFields();
+    public Map<String, Boolean> getFacetFields();
 }
