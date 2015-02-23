@@ -1,7 +1,5 @@
 #org.brutusin:flea-db
-A tiny, embeddable, schema-full, java-based, object database supporting pagination, faceted search, and both object-mapping and generic API's.
-
-Built on top of Apache Lucene.
+A tiny, embeddable, schema-full, java-based, object database supporting pagination, faceted search, and both object-mapping and generic API's. Built on top of Apache Lucene.
 
 **Example** 
 ```java 
@@ -9,18 +7,11 @@ Built on top of Apache Lucene.
 ObjectFleaDB db = new ObjectFleaDB(Record.class);
 for (int i = 0; i < REC_NO; i++) {
     Record r = new Record();
-    r.setId(String.valueOf(i));
-    r.setAge(i);
-    String[] categories = new String[]{"mod2:" + i % 2, "mod3:" + i % 3};
-    r.setCategories(categories);
-    if (i > 5) {
-        Map<String, Component> components = new HashMap();
-        components.put("component-" + (i < 10), new Component("item " + i, i));
-        r.setComponents(components);
-    }
+    // ... populate record
     db.store(r);
 }
 db.commit();
+
 // Query objects
 Query q = Query.createTermQuery("$.id", "0");
 Paginator<Record> paginator = db.query(q);
@@ -33,6 +24,7 @@ for (int i = 1; i <= totalPages; i++) {
         System.out.println(record);
     }
 }
+ 
 ```
 
 **Main features**
