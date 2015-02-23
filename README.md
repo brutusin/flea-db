@@ -4,7 +4,7 @@
 
 A tiny, embeddable, schema-full, java-based, object database supporting pagination, faceted search, and both object-mapping and generic API's. Built on top of Apache Lucene.
 
-**Example** 
+**Example:** 
 ```java 
 // Create object database
 ObjectFleaDB db = new ObjectFleaDB(indexFolder, Record.class);
