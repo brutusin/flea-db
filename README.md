@@ -1,6 +1,6 @@
 #org.brutusin:flea-db 
 
-*Documentation under development. Not released to maven-central yet*
+-*Documentation under development. Not released to maven-central yet*-
 
 A tiny, embeddable, schema-full, java-based, object database supporting pagination, faceted search, and both object-mapping and generic API's. Built on top of Apache Lucene.
 
