@@ -29,9 +29,9 @@ for (int i = 1; i <= totalPages; i++) {
 
 **Main features**
 * **Schema-full**: Based on [JSON Schema](http://json-schema.org/), this feature enables to provide record and queries validation as well as a generic API.
-* **Pagination**: Given that input schema is known, input data can have an arbitrary complexity.
-* **Faceted search**: Caching and status codes are handled automatically. Service code is only related to the business. Neither HTTP nor serialization related coding.
-* **In memory/disk versions**: Business is coded as simple `O execute(I input)` methods . No annotations needed.
+* **Pagination**:
+* **Faceted search**:
+* **In memory/disk versions**:
 
 
 ##Example:
