@@ -1,4 +1,4 @@
-#org.brutusin:flea-db
+#org.brutusin:flea-db (*Documentation under development. Not released to maven-central yet*)
 A tiny, embeddable, schema-full, java-based, object database supporting pagination, faceted search, and both object-mapping and generic API's. Built on top of Apache Lucene.
 
 **Example** 
@@ -28,14 +28,22 @@ for (int i = 1; i <= totalPages; i++) {
 ```
 
 **Main features**
-* **Schema-full**: Based on [JSON Schema](http://json-schema.org/), this feature enables to provide record and queries validation as well as a generic API.
-* **Pagination**:
-* **Faceted search**:
-* **In memory/disk versions**:
+* **Schema-full**: Based on [JSON Schema](http://json-schema.org/).
+* **Object-mapping API**: Using <E> for records and generating database schema from Class<E>.
+* **Generic API**: Using JSON for records and JSON Schema for database schema.
+* **Record validation**
+* **Field name and type validation**: For queries and sorting.
+* **Pagination**
+* **Faceted search**
+* **In memory/disk versions**
 
 
 ##Example:
 See available [test classes](src/test/java/org/brutusin/fleadb/impl/) for more details.
+
+## Implementation details
+###JSON SPI
+This module makes use of the [JSON SPI](https://github.com/brutusin/commons/tree/master/src/main/java/org/brutusin/commons/json/spi), so a JSON service provider like [json-codec-jackson](https://github.com/brutusin/json-codec-jackson) is needed at runtime. The choosen provider will determine JSON serialization, validation, parsing and schema generation.
 
 ##Main stack
 This module could not be possible without:
@@ -46,7 +54,7 @@ This module could not be possible without:
   * [com.github.fge:json-schema-validator](https://github.com/fge/json-schema-validator): For validation against a JSON schema.
 
 ##Currently used Lucene version
-4.10.3 (Dec, 2014)
+`4.10.3` (Dec, 2014)
 
 ## Support, bugs and requests
 https://github.com/brutusin/flea-db/issues
