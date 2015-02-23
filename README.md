@@ -45,6 +45,9 @@ This module could not be possible without:
   * [com.fasterxml.jackson.module:jackson-module-jsonSchema](https://github.com/FasterXML/jackson-module-jsonSchema): For java class to JSON schema mapping.
   * [com.github.fge:json-schema-validator](https://github.com/fge/json-schema-validator): For validation against a JSON schema.
 
+##Currently used Lucene version
+4.10.3 (Dec, 2014)
+
 ## Support, bugs and requests
 https://github.com/brutusin/flea-db/issues
 
