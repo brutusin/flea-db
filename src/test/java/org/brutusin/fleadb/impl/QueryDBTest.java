@@ -92,6 +92,12 @@ public class QueryDBTest {
         assertEquals(1, paginator.getTotalHits());
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testInvalidTypeString() {
+        Query q = Query.createTermQuery("$.age", "0");
+        q.getLuceneQuery(db.getSchema());
+    }
+
     @Test
     public void testQueryArray() {
         Query q = Query.createTermQuery("$.categories[#]", "mod2:0");

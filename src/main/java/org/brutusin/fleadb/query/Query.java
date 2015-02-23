@@ -16,9 +16,15 @@
 package org.brutusin.fleadb.query;
 
 import org.apache.lucene.index.Term;
+import org.apache.lucene.search.FuzzyQuery;
 import org.apache.lucene.search.MatchAllDocsQuery;
 import org.apache.lucene.search.NumericRangeQuery;
+import org.apache.lucene.search.PrefixQuery;
+import org.apache.lucene.search.RegexpQuery;
 import org.apache.lucene.search.TermQuery;
+import org.apache.lucene.search.TermRangeQuery;
+import org.apache.lucene.search.WildcardQuery;
+import org.apache.lucene.util.BytesRef;
 import org.brutusin.commons.json.spi.JsonNode;
 import org.brutusin.fleadb.Schema;
 
@@ -57,12 +63,62 @@ public abstract class Query {
         };
     }
 
+    public static Query createTermRangeQuery(final String field, final String lower, final String upper, final boolean minInclusive, final boolean maxInclusive) {
+        return new Query() {
+            @Override
+            public org.apache.lucene.search.Query getLuceneQuery(Schema schema) {
+                validateType(field, schema, JsonNode.Type.STRING);
+                return new TermRangeQuery(field, new BytesRef(lower), new BytesRef(upper), minInclusive, maxInclusive);
+            }
+        };
+    }
+
     public static Query createTermQuery(final String field, final String value) {
         return new Query() {
             @Override
             public org.apache.lucene.search.Query getLuceneQuery(Schema schema) {
                 validateType(field, schema, JsonNode.Type.STRING);
                 return new TermQuery(new Term(field, value));
+            }
+        };
+    }
+
+    public static Query createWildcardQuery(final String field, final String value) {
+        return new Query() {
+            @Override
+            public org.apache.lucene.search.Query getLuceneQuery(Schema schema) {
+                validateType(field, schema, JsonNode.Type.STRING);
+                return new WildcardQuery(new Term(field, value));
+            }
+        };
+    }
+
+    public static Query createPrefixQuery(final String field, final String value) {
+        return new Query() {
+            @Override
+            public org.apache.lucene.search.Query getLuceneQuery(Schema schema) {
+                validateType(field, schema, JsonNode.Type.STRING);
+                return new PrefixQuery(new Term(field, value));
+            }
+        };
+    }
+
+    public static Query createFuzzyQuery(final String field, final String value) {
+        return new Query() {
+            @Override
+            public org.apache.lucene.search.Query getLuceneQuery(Schema schema) {
+                validateType(field, schema, JsonNode.Type.STRING);
+                return new FuzzyQuery(new Term(field, value));
+            }
+        };
+    }
+
+    public static Query createRegExpQuery(final String field, final String value) {
+        return new Query() {
+            @Override
+            public org.apache.lucene.search.Query getLuceneQuery(Schema schema) {
+                validateType(field, schema, JsonNode.Type.STRING);
+                return new RegexpQuery(new Term(field, value));
             }
         };
     }
