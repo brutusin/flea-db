@@ -20,7 +20,6 @@ db.commit();
 // Query records
 Query q = Query.createTermQuery("$.id", "0");
 Paginator<Record> paginator = db.query(q);
-int pageSize = 1;
 int totalPages = paginator.getTotalPages(pageSize);
 for (int i = 1; i <= totalPages; i++) {
     List<Record> page = paginator.getPage(i, pageSize);
