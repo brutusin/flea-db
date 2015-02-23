@@ -20,8 +20,8 @@ int totalPages = paginator.getTotalPages(pageSize);
 for (int i = 1; i <= totalPages; i++) {
     List<Record> page = paginator.getPage(i, pageSize);
     for (int j = 0; j < page.size(); j++) {
-        Record record = page.get(j);
-        System.out.println(record);
+        Record r = page.get(j);
+        System.out.println(r);
     }
 }
  
