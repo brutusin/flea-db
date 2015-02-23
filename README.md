@@ -48,6 +48,7 @@ for (int i = 1; i <= totalPages; i++) {
         System.out.println(json);
     }
 }
+gdb.close();
 ```
 
 ##Main features
