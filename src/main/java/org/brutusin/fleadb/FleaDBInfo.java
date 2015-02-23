@@ -31,7 +31,6 @@ import org.brutusin.fleadb.impl.SchemaImpl;
 public class FleaDBInfo {
 
     private Schema schema;
-    private String hash;
 
     public void setSchema(Schema schema) {
         this.schema = schema;
@@ -41,26 +40,11 @@ public class FleaDBInfo {
         return schema;
     }
 
-    public String getHash() {
-        return hash;
-    }
-
-    public void setHash(String hash) {
-        this.hash = hash;
-    }
-
     @Override
     public final String toString() {
         StringBuilder sb = new StringBuilder("{\"jsonSchema\":");
         sb.append(getSchema().getJSONSChema());
-        String hash = getHash();
-        if (hash != null) {
-            sb.append(",\"hash\":\"");
-            sb.append(hash);
-            sb.append("\"}");
-        } else {
-            sb.append("}");
-        }
+        sb.append("}");
         try {
             return JsonCodec.getInstance().prettyPrint(sb.toString());
         } catch (ParseException ex) {
@@ -69,12 +53,10 @@ public class FleaDBInfo {
     }
 
     public static FleaDBInfo readFromFile(File f) throws ParseException, IOException {
+        FleaDBInfo ret = new FleaDBInfo();
         String json = Miscellaneous.toString(new FileInputStream(f), "UTF-8");
         JsonNode jsonNode = JsonCodec.getInstance().parse(json);
         Schema schema = new SchemaImpl(JsonCodec.getInstance().parseSchema(jsonNode.get("jsonSchema").toString()));
-        String hash = jsonNode.get("hash").toString();
-        FleaDBInfo ret = new FleaDBInfo();
-        ret.setHash(hash);
         ret.setSchema(schema);
         return ret;
     }

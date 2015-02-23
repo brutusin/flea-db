@@ -16,11 +16,11 @@
 package org.brutusin.fleadb;
 
 import java.util.List;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.search.Sort;
 import org.brutusin.commons.search.ActiveFacetMap;
 import org.brutusin.commons.search.FacetResponse;
 import org.brutusin.fleadb.pagination.Paginator;
+import org.brutusin.fleadb.query.Query;
+import org.brutusin.fleadb.sort.Sort;
 
 /**
  *
@@ -30,6 +30,8 @@ public interface FleaDB<E> {
 
     public E getSingleResult(final Query q);
 
+    public Paginator<E> query(final Query q);
+    
     public Paginator<E> query(final Query q, final Sort sort);
 
     public void store(E entity);

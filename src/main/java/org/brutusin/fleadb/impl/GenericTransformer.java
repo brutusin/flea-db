@@ -40,7 +40,7 @@ import org.brutusin.fleadb.utils.Expression;
  *
  * @author Ignacio del Valle Alles idelvall@brutusin.org
  */
-public class FleaTransformer implements DocTransformer<JsonNode> {
+public class GenericTransformer implements DocTransformer<JsonNode> {
 
     private static final FieldType NON_INDEXED_TYPE = new FieldType();
     private static final String OBJECT_FIELD_NAME = "$json";
@@ -53,11 +53,11 @@ public class FleaTransformer implements DocTransformer<JsonNode> {
     private final Schema schema;
     private final JsonSchema jsonSchema;
 
-    public FleaTransformer(Schema schema) {
+    public GenericTransformer(Schema schema) {
         this.schema = schema;
         try {
             if (schema != null) {
-                this.jsonSchema = JsonCodec.getInstance().parseSchema(schema.getJSONSChema());
+                this.jsonSchema = schema.getJSONSChema();
             } else {
                 this.jsonSchema = null;
             }

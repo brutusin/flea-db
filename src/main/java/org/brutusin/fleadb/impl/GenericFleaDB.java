@@ -18,14 +18,11 @@ package org.brutusin.fleadb.impl;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.facet.FacetField;
 import org.apache.lucene.facet.FacetResult;
-import org.apache.lucene.facet.Facets;
 import org.apache.lucene.facet.FacetsCollector;
 import org.apache.lucene.facet.FacetsConfig;
 import org.apache.lucene.facet.LabelAndValue;
@@ -37,34 +34,27 @@ import org.apache.lucene.facet.taxonomy.directory.DirectoryTaxonomyWriter;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.index.Term;
 import org.apache.lucene.search.BooleanClause;
-import org.apache.lucene.search.BooleanQuery;
 import org.apache.lucene.search.IndexSearcher;
-import org.apache.lucene.search.MatchAllDocsQuery;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.search.Sort;
-import org.apache.lucene.search.SortField;
-import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.util.Version;
 import org.brutusin.commons.Pair;
 import org.brutusin.commons.json.ParseException;
-import org.brutusin.commons.json.annotations.IndexableProperty;
-import org.brutusin.commons.json.spi.JsonCodec;
 import org.brutusin.commons.json.spi.JsonNode;
 import org.brutusin.commons.json.spi.JsonSchema;
 import org.brutusin.commons.search.ActiveFacetMap;
 import org.brutusin.commons.search.FacetResponse;
 import org.brutusin.commons.search.FacetValueResponse;
-import org.brutusin.commons.utils.CryptoUtils;
 import org.brutusin.fleadb.FleaDB;
 import org.brutusin.fleadb.FleaDBInfo;
 import org.brutusin.fleadb.Schema;
 import org.brutusin.fleadb.pagination.Paginator;
 import org.brutusin.fleadb.pagination.PaginatorImpl;
+import org.brutusin.fleadb.query.BooleanQuery;
+import org.brutusin.fleadb.query.Query;
+import org.brutusin.fleadb.sort.Sort;
 
 /**
  *
@@ -75,10 +65,11 @@ public final class GenericFleaDB implements FleaDB<JsonNode> {
     public static final Version LUCENE_VERSION = Version.LUCENE_4_10_3;
 
     private final FleaDBInfo dsInfo;
-    private final FleaTransformer transformer;
+    private final GenericTransformer transformer;
     private final Directory indexDir;
     private final Directory facetDir;
     private final File indexFolder;
+    private final String[] allFacetNames;
 
     private FacetsConfig facetsConfig;
 
@@ -91,19 +82,15 @@ public final class GenericFleaDB implements FleaDB<JsonNode> {
     private volatile TaxonomyReader taxonomyReader;
     private volatile TaxonomyWriter taxonomyWriter;
 
-    public GenericFleaDB(File indexFolder) throws IOException {
-        this(indexFolder, null);
-    }
-
     public GenericFleaDB(JsonSchema jsonSchema) throws IOException {
         this(null, jsonSchema);
     }
 
-    public GenericFleaDB(File indexFolder, JsonSchema jsonSchema) throws IOException {
-        this(indexFolder, jsonSchema, false);
+    public GenericFleaDB(File indexFolder) throws IOException {
+        this(indexFolder, null);
     }
 
-    public GenericFleaDB(File indexFolder, JsonSchema jsonSchema, boolean ignoreHash) throws IOException {
+    public GenericFleaDB(File indexFolder, JsonSchema jsonSchema) throws IOException {
         try {
             this.indexFolder = indexFolder;
             Schema schema;
@@ -130,15 +117,7 @@ public final class GenericFleaDB implements FleaDB<JsonNode> {
                     if (this.dsInfo == null) {
                         throw new IllegalArgumentException("Unable to read schema from specified index folder '" + indexFolder + "'");
                     }
-                    String hash = getHash(indexFolder);
-                    if (dsInfo.getHash() == null) {
-                        dsInfo.setHash(hash);
-                        writeFleaDBInfo();
-                    }
-                    if (!ignoreHash && !dsInfo.getHash().equals(hash)) {
-                        throw new IllegalStateException("Invalid index hash '" + hash + "'. Index at '" + indexFolder + "' has been modified externally");
-                    }
-                    if (schema != null && !this.dsInfo.getSchema().equals(schema)) {
+                    if (schema != null && !this.dsInfo.getSchema().getJSONSChema().equals(schema.getJSONSChema())) {
                         throw new IllegalArgumentException("Specified schema is incompatible with current datasource for index at '" + indexFolder + "'");
                     }
                 } else {
@@ -147,11 +126,12 @@ public final class GenericFleaDB implements FleaDB<JsonNode> {
                     }
                     this.dsInfo = new FleaDBInfo();
                     this.dsInfo.setSchema(schema);
+                    writeFleaDBInfo();
                 }
                 this.indexDir = FSDirectory.open(indexFolder);
                 this.facetDir = FSDirectory.open(new File(indexFolder, "facets"));
             }
-            this.transformer = new FleaTransformer(this.dsInfo.getSchema());
+            this.transformer = new GenericTransformer(this.dsInfo.getSchema());
             this.facetsConfig = new FacetsConfig();
             Map<String, Boolean> facets = getSchema().getFacetFields();
             for (Map.Entry<String, Boolean> entry : facets.entrySet()) {
@@ -159,7 +139,11 @@ public final class GenericFleaDB implements FleaDB<JsonNode> {
                 Boolean multievaluated = entry.getValue();
                 facetsConfig.setMultiValued(facet, multievaluated);
             }
-
+            this.allFacetNames = new String[this.dsInfo.getSchema().getFacetFields().size()];
+            int i = 0;
+            for (String facet : this.dsInfo.getSchema().getFacetFields().keySet()) {
+                this.allFacetNames[i++] = facet;
+            }
         } catch (Throwable th) {
             close();
             if (th instanceof IOException) {
@@ -244,7 +228,6 @@ public final class GenericFleaDB implements FleaDB<JsonNode> {
             }
             if (this.indexWriter != null) {
                 this.indexWriter.close();
-                writeFleaDBInfo();
             }
         } catch (IOException ex) {
             throw new RuntimeException(ex);
@@ -253,7 +236,7 @@ public final class GenericFleaDB implements FleaDB<JsonNode> {
 
     @Override
     public JsonNode getSingleResult(Query q) {
-        Paginator<JsonNode> paginator = query(q, Sort.RELEVANCE);
+        Paginator<JsonNode> paginator = query(q, null);
         if (paginator.getTotalHits() > 1) {
             throw new IllegalArgumentException("Query returned more than 1 results");
         }
@@ -261,10 +244,15 @@ public final class GenericFleaDB implements FleaDB<JsonNode> {
     }
 
     @Override
+    public final Paginator<JsonNode> query(final Query q) {
+        return query(q, null);
+    }
+
+    @Override
     public final Paginator<JsonNode> query(final Query q, final Sort sort) {
         try {
             verifyNotClosed();
-            return new PaginatorImpl<JsonNode>(getIndexSearcher(), this.transformer, q, sort);
+            return new PaginatorImpl<JsonNode>(getIndexSearcher(), this.transformer, q.getLuceneQuery(getSchema()), sort == null ? null : sort.getLuceneSort(getSchema()));
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
@@ -274,15 +262,14 @@ public final class GenericFleaDB implements FleaDB<JsonNode> {
     public final List<FacetResponse> getFacetValues(final Query q, int maxFacetValues) {
         try {
             verifyNotClosed();
-            List<String> allFacets = queryAllFacets();
-            if (allFacets == null || allFacets.isEmpty()) {
+            if (this.allFacetNames.length == 0) {
                 return null;
             }
-            int[] maxFacetValuesArr = new int[allFacets.size()];
+            int[] maxFacetValuesArr = new int[allFacetNames.length];
             for (int i = 0; i < maxFacetValuesArr.length; i++) {
                 maxFacetValuesArr[i] = maxFacetValues;
             }
-            return getFacetValues(q, allFacets, maxFacetValuesArr);
+            return getFacetValues(q, allFacetNames, maxFacetValuesArr);
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
@@ -294,13 +281,13 @@ public final class GenericFleaDB implements FleaDB<JsonNode> {
             if (facets == null) {
                 facets = new ActiveFacetMap();
             }
-            List<String> facetNames = new ArrayList<String>();
+            String[] facetNames = new String[facets.size()];
             int[] maxFacetValues = new int[facets.size()];
             int i = 0;
             for (Map.Entry<String, Integer> entry : facets.entrySet()) {
-                String string = entry.getKey();
+                String facet = entry.getKey();
                 Integer integer = entry.getValue();
-                facetNames.add(string);
+                facetNames[i] = facet;
                 maxFacetValues[i] = integer;
                 i++;
             }
@@ -313,29 +300,27 @@ public final class GenericFleaDB implements FleaDB<JsonNode> {
     @Override
     public int getNumFacetValues(final Query q, final String facetName) {
         try {
-            List<String> facetNames = new ArrayList<String>(1);
-            facetNames.add(facetName);
-            List<FacetResponse> frs = getFacetValues(q, facetNames, new int[]{1});
+            List<FacetResponse> frs = getFacetValues(q, new String[]{facetName}, new int[]{1});
             return frs.get(0).getNumFacetValues();
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
     }
 
-    private final List<FacetResponse> getFacetValues(final Query q, List<String> facetNames, int[] maxFacetValues) throws IOException {
+    private final List<FacetResponse> getFacetValues(final Query q, String[] facetNames, int[] maxFacetValues) throws IOException {
         verifyNotClosed();
-        if (facetNames == null || facetNames.size() == 0) {
+        if (facetNames == null || facetNames.length == 0) {
             return null;
         }
 
         List<FacetResponse> ret = new ArrayList<FacetResponse>();
         FacetsCollector facetCollector = new FacetsCollector();
-        getIndexSearcher().search(q, facetCollector);
+        getIndexSearcher().search(q.getLuceneQuery(getSchema()), facetCollector);
         FacetsConfig config = new FacetsConfig();
         FastTaxonomyFacetCounts facets = new FastTaxonomyFacetCounts(getTaxonomyReader(), config, facetCollector);
 
-        for (int i = 0; i < facetNames.size(); i++) {
-            String facetName = facetNames.get(i);
+        for (int i = 0; i < facetNames.length; i++) {
+            String facetName = facetNames[i];
             FacetResult res = facets.getTopChildren(maxFacetValues[i], facetName);
             if (res != null) {
                 FacetResponse fr = new FacetResponse(facetName);
@@ -363,7 +348,7 @@ public final class GenericFleaDB implements FleaDB<JsonNode> {
             BooleanQuery bq = new BooleanQuery();
             bq.add(q, BooleanClause.Occur.MUST);
 
-            List<FacetResponse> startingResponse = getFacetValues(bq, Arrays.asList(new String[]{facetName}), new int[]{max});
+            List<FacetResponse> startingResponse = getFacetValues(bq, new String[]{facetName}, new int[]{max});
             if (prefix != null) {
                 double exactMultiplicity = getFacetValueMultiplicity(facetName, prefix, q);
                 if (exactMultiplicity > 0) {
@@ -383,8 +368,8 @@ public final class GenericFleaDB implements FleaDB<JsonNode> {
         verifyNotClosed();
         BooleanQuery bq = new BooleanQuery();
         bq.add(q, BooleanClause.Occur.MUST);
-        bq.add(new TermQuery(new Term(facetName, facetValue)), BooleanClause.Occur.MUST);
-        Paginator pag = query(bq, Sort.RELEVANCE);
+        bq.add(Query.createTermQuery(facetName, facetValue), BooleanClause.Occur.MUST);
+        Paginator pag = query(bq, null);
         return pag.getTotalHits();
     }
 
@@ -397,7 +382,7 @@ public final class GenericFleaDB implements FleaDB<JsonNode> {
     public final void delete(Query q) {
         try {
             verifyNotClosed();
-            this.getIndexWriter().deleteDocuments(q);
+            this.getIndexWriter().deleteDocuments(q.getLuceneQuery(getSchema()));
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
@@ -410,7 +395,6 @@ public final class GenericFleaDB implements FleaDB<JsonNode> {
             this.getTaxonomyWriter().commit();
             this.getIndexWriter().commit();
             refresh();
-            writeFleaDBInfo();
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
@@ -439,60 +423,10 @@ public final class GenericFleaDB implements FleaDB<JsonNode> {
         }
     }
 
-    public final Paginator<JsonNode> getAllEntities() throws IOException {
-        return query(new MatchAllDocsQuery(), Sort.RELEVANCE);
-    }
-
-    public final List<String> queryAllFacets() {
-        verifyNotClosed();
-        try {
-            List<String> ret = new ArrayList<String>();
-
-            FacetsCollector sfc = new FacetsCollector();
-            getIndexSearcher().search(new MatchAllDocsQuery(), sfc);
-            FacetsConfig config = new FacetsConfig();
-            Facets facets = new FastTaxonomyFacetCounts(getTaxonomyReader(), config, sfc);
-            for (FacetResult result : facets.getAllDims(1)) {
-                ret.add(result.dim);
-            }
-            return ret;
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-
     private void verifyNotClosed() {
         if (this.closed) {
             throw new IllegalStateException("Datasource has been closed");
         }
-    }
-
-    private static String getHash(File file) throws IOException {
-
-        if (file == null || !file.exists()) {
-            return null;
-        }
-        String ret = CryptoUtils.getHashMD5(file.getName());
-        if (file.isFile()) {
-            if (file.getName().equals("info.xml") || file.length() == 0 || file.getName().startsWith(".")) {
-                return null;
-            }
-            ret = CryptoUtils.getHashMD5(ret + file.length());
-        } else {
-            File[] listFiles = file.listFiles();
-            if (listFiles != null) {
-                Arrays.sort(listFiles);
-                for (int i = 0; i < listFiles.length; i++) {
-                    String hash = getHash(listFiles[i]);
-                    if (hash != null) {
-                        ret = CryptoUtils.getHashMD5(ret + hash);
-                    }
-                }
-            } else {
-                return null;
-            }
-        }
-        return ret;
     }
 
     public void optimize() throws IOException {
@@ -543,178 +477,4 @@ public final class GenericFleaDB implements FleaDB<JsonNode> {
         this.taxonomyReader = null;
     }
 
-    public static void main(String[] args) throws Exception {
-        JsonSchema jsonSchema = JsonCodec.getInstance().parseSchema(JsonCodec.getInstance().getSchemaString(Record.class));
-        GenericFleaDB db = new GenericFleaDB(jsonSchema);
-        System.out.println(db.getFleaDBInfo().getSchema().getFacetFields());
-        Record r = new Record();
-        r.setId("jairo");
-        r.setCategory(new String[]{"man", "supergay"});
-        r.setAge(31);
-        r.setDog(new Dog("perrin"));
-        HashMap<String, Stuff> map = new HashMap<String, Stuff>();
-        map.put("bici", new Stuff("orbea", 1));
-        map.put("coche", new Stuff("fiat", 1));
-        r.setStuff(map);
-        db.store(JsonCodec.getInstance().parse(JsonCodec.getInstance().transform(r)));
-
-        r = new Record();
-        r.setId("nacho");
-        r.setCategory(new String[]{"man"});
-        r.setAge(35);
-        map = new HashMap<String, Stuff>();
-        map.put("lancha", new Stuff("narval", 1));
-        map.put("bici", new Stuff("scott", 1));
-        r.setStuff(map);
-        db.store(JsonCodec.getInstance().parse(JsonCodec.getInstance().transform(r)));
-        
-        r = new Record();
-        r.setId("bego");
-        r.setCategory(new String[]{"woman"});
-        r.setAge(35);
-        map = new HashMap<String, Stuff>();
-        map.put("maquina", new Stuff("singer", 1));
-         map.put("bici", new Stuff("bh", 1));
-        r.setStuff(map);
-        db.store(JsonCodec.getInstance().parse(JsonCodec.getInstance().transform(r)));
-
-        db.commit();
-        Query q = new MatchAllDocsQuery();
-        //        Query q = new TermQuery(new Term("$.category[#]", "guay"));
-        //Query q = NumericRangeQuery.newLongRange("$.age", 0l, 33l, true, true);
-
-        Sort sort = new Sort(new SortField("$.dog.name", SortField.Type.STRING, true));
-        Paginator<JsonNode> pag = db.query(q, sort);
-
-        System.out.println(db.getFleaDBInfo());
-        System.out.println(db.getFleaDBInfo().getSchema().getIndexFields());
-        System.out.println(db.getFleaDBInfo().getSchema().getFacetFields());
-        int pageSize = 1;
-        int totalPages = pag.getTotalPages(pageSize);
-        long prev = System.currentTimeMillis();
-        for (int i = 1; i <= totalPages; i++) {
-            List<JsonNode> page = pag.getPage(i, pageSize);
-            System.out.println("**** Page " + i);
-            for (JsonNode rec : page) {
-                System.out.println(rec);
-            }
-            long current = System.currentTimeMillis();
-            System.out.println(current - prev + " ms");
-            prev = current;
-        }
-        long start = System.currentTimeMillis();
-        List<FacetResponse> facetValues = db.getFacetValues(q, 10);
-        System.out.println("Facet time: " + (System.currentTimeMillis() - start));
-        for (int i = 0; i < facetValues.size(); i++) {
-            FacetResponse fr = facetValues.get(i);
-            List<FacetValueResponse> facetValues1 = fr.getFacetValues();
-            System.out.println(fr.getFacetName() + "\t" + fr.getNumFacetValues());
-            for (int j = 0; j < facetValues1.size(); j++) {
-                FacetValueResponse fvr = facetValues1.get(j);
-                System.out.println("\t" + fvr.getValue() + "\t" + fvr.getMultiplicity());
-            }
-        }
-    }
-
-    static class Record {
-
-        @IndexableProperty
-        private String id;
-        @IndexableProperty(mode = IndexableProperty.IndexMode.facet)
-        private String[] category;
-        @IndexableProperty(mode = IndexableProperty.IndexMode.facet)
-        private Map<String, Stuff> stuff;
-        @IndexableProperty
-        private int age;
-
-        private Dog dog;
-
-        public Map<String, Stuff> getStuff() {
-            return stuff;
-        }
-
-        public Dog getDog() {
-            return dog;
-        }
-
-        public void setDog(Dog dog) {
-            this.dog = dog;
-        }
-
-        public void setStuff(Map<String, Stuff> stuff) {
-            this.stuff = stuff;
-        }
-
-        public String getId() {
-            return id;
-        }
-
-        public void setId(String id) {
-            this.id = id;
-        }
-
-        public String[] getCategory() {
-            return category;
-        }
-
-        public int getAge() {
-            return age;
-        }
-
-        public void setAge(int age) {
-            this.age = age;
-        }
-
-        public void setCategory(String[] category) {
-            this.category = category;
-        }
-    }
-
-    static class Stuff {
-
-        @IndexableProperty(mode = IndexableProperty.IndexMode.facet)
-        private String name;
-        @IndexableProperty
-        private int number;
-
-        public Stuff(String name, int number) {
-            this.name = name;
-            this.number = number;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public int getNumber() {
-            return number;
-        }
-
-        public void setNumber(int number) {
-            this.number = number;
-        }
-    }
-
-    static class Dog {
-
-        @IndexableProperty(mode = IndexableProperty.IndexMode.facet)
-        private String name;
-
-        public Dog(String name) {
-            this.name = name;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-    }
 }

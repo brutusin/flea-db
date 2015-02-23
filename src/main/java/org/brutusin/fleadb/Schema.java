@@ -16,8 +16,8 @@
 package org.brutusin.fleadb;
 
 import java.util.Map;
-import java.util.Set;
 import org.brutusin.commons.json.spi.JsonNode;
+import org.brutusin.commons.json.spi.JsonSchema;
 
 /**
  * Flea-db database schema.
@@ -31,7 +31,7 @@ public interface Schema {
      *
      * @return
      */
-    public String getJSONSChema();
+    public JsonSchema getJSONSChema();
 
     /**
      * Returns the lucene index field names and their type, that can be used in
