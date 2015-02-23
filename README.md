@@ -6,8 +6,8 @@ A tiny, embeddable, schema-full, java-based, object database supporting paginati
 
 **Example** 
 ```java 
-// Create in memory database
-ObjectFleaDB db = new ObjectFleaDB(Record.class);
+// Create object database
+ObjectFleaDB db = new ObjectFleaDB(indexFolder, Record.class);
 for (int i = 0; i < REC_NO; i++) {
     Record r = new Record();
     // ... populate record
@@ -27,7 +27,26 @@ for (int i = 1; i <= totalPages; i++) {
         System.out.println(r);
     }
 }
- 
+db.close();
+
+// Generic interaction with the previously created database
+GenericFleaDB gdb = new GenericFleaDB(indexFolder);
+
+// Both for storing
+JsonNode json = JsonCodec.getInstance.parse("...");
+gdb.store(json);
+gdb.commit();
+
+// and querying:
+Paginator<JsonRecord> paginator = gdb.query(q); // same query instance
+totalPages = paginator.getTotalPages(pageSize);
+for (int i = 1; i <= totalPages; i++) {
+    List<JsonRecord> page = paginator.getPage(i, pageSize);
+    for (int j = 0; j < page.size(); j++) {
+        JsonRecord json = page.get(j);
+        System.out.println(json);
+    }
+}
 ```
 
 **Main features**
