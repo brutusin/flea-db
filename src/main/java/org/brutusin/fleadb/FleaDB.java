@@ -16,8 +16,8 @@
 package org.brutusin.fleadb;
 
 import java.util.List;
-import org.brutusin.commons.search.ActiveFacetMap;
-import org.brutusin.commons.search.FacetResponse;
+import org.brutusin.fleadb.facet.FacetMultiplicities;
+import org.brutusin.fleadb.facet.FacetResponse;
 import org.brutusin.fleadb.pagination.Paginator;
 import org.brutusin.fleadb.query.Query;
 import org.brutusin.fleadb.sort.Sort;
@@ -38,7 +38,7 @@ public interface FleaDB<E> {
 
     public void delete(Query q);
 
-    public List<FacetResponse> getFacetValues(final Query q, ActiveFacetMap activeFacets);
+    public List<FacetResponse> getFacetValues(final Query q, FacetMultiplicities activeFacets);
 
     public List<FacetResponse> getFacetValues(final Query q, int maxFacetValues);
 

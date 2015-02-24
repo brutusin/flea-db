@@ -38,7 +38,7 @@ public class BooleanQuery extends Query {
         for (Map.Entry<Query, BooleanClause.Occur> entry : clauses.entrySet()) {
             Query query = entry.getKey();
             BooleanClause.Occur occur = entry.getValue();
-            q.add(q, occur);
+            q.add(query.getLuceneQuery(schema), occur);
         }
         return q;
     }

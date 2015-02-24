@@ -15,17 +15,11 @@
  */
 package org.brutusin.fleadb.impl;
 
-import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import org.brutusin.fleadb.impl.record.Component;
 import org.brutusin.fleadb.impl.record.Record;
 import org.brutusin.fleadb.pagination.Paginator;
 import org.brutusin.fleadb.query.Query;
 import org.brutusin.fleadb.sort.Sort;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
@@ -33,50 +27,19 @@ import static org.junit.Assert.*;
  *
  * @author Ignacio del Valle Alles idelvall@brutusin.org
  */
-public class QueryDBTest {
-
-    private final int REC_NO = 20;
-    private ObjectFleaDB<Record> db;
-
-    @Before
-    public void setUp() {
-        try {
-            db = new ObjectFleaDB(Record.class);
-            for (int i = 0; i < REC_NO; i++) {
-                Record r = new Record();
-                r.setId(String.valueOf(i));
-                r.setAge(i);
-                String[] categories = new String[]{"mod2:" + i % 2, "mod3:" + i % 3};
-                r.setCategories(categories);
-                if (i > 5) {
-                    Map<String, Component> components = new HashMap();
-                    components.put("component-" + (i < 10), new Component("item " + i, i));
-                    r.setComponents(components);
-                }
-                db.store(r);
-            }
-            db.commit();
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-
-    @After
-    public void tearDown() {
-        db.close();
-    }
+public class QueryDBTest extends InMemoryFleaDBTest {
 
     @Test
     public void testStoreAndRetrieve() {
         Paginator<Record> paginator = db.query(Query.MATCH_ALL_DOCS_QUERY);
-        assertEquals(REC_NO, paginator.getTotalHits());
+        assertEquals(getMaxRecords(), paginator.getTotalHits());
     }
 
     @Test
     public void testQueryInteger() {
-        Query q = Query.createIntegerRangeQuery("$.age", 1l, (long) REC_NO - 1, true, true);
+        Query q = Query.createIntegerRangeQuery("$.age", 1l, (long) getMaxRecords() - 1, true, true);
         Paginator<Record> paginator = db.query(q);
-        assertEquals(REC_NO - 1, paginator.getTotalHits());
+        assertEquals(getMaxRecords() - 1, paginator.getTotalHits());
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -102,7 +65,7 @@ public class QueryDBTest {
     public void testQueryArray() {
         Query q = Query.createTermQuery("$.categories[#]", "mod2:0");
         Paginator<Record> paginator = db.query(q);
-        int pageSize = REC_NO;
+        int pageSize = getMaxRecords();
         List<Record> page = paginator.getPage(1, pageSize);
         for (int i = 0; i < page.size(); i++) {
             Record record = page.get(i);
@@ -114,7 +77,7 @@ public class QueryDBTest {
     public void testSort() {
         Query q = Query.MATCH_ALL_DOCS_QUERY;
         Paginator<Record> paginator = db.query(q, Sort.by("$.age", true));
-        int pageSize = REC_NO;
+        int pageSize = getMaxRecords();
         List<Record> page = paginator.getPage(1, pageSize);
         int prevAge = Integer.MAX_VALUE;
         for (int i = 0; i < page.size(); i++) {
@@ -132,7 +95,7 @@ public class QueryDBTest {
         int totalPages = paginator.getTotalPages(pageSize);
         int counter = 0;
         for (int i = 1; i <= totalPages; i++) {
-            assertTrue(counter <= REC_NO);
+            assertTrue(counter <= getMaxRecords());
             List<Record> page = paginator.getPage(i, pageSize);
             for (int j = 0; j < page.size(); j++) {
                 Record record = page.get(j);
@@ -140,7 +103,7 @@ public class QueryDBTest {
                 counter++;
             }
         }
-        assertTrue(counter == REC_NO);
+        assertTrue(counter == getMaxRecords());
     }
 
     @Test(expected = IllegalArgumentException.class)

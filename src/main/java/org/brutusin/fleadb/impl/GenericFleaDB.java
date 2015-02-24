@@ -44,9 +44,9 @@ import org.brutusin.commons.Pair;
 import org.brutusin.commons.json.ParseException;
 import org.brutusin.commons.json.spi.JsonNode;
 import org.brutusin.commons.json.spi.JsonSchema;
-import org.brutusin.commons.search.ActiveFacetMap;
-import org.brutusin.commons.search.FacetResponse;
-import org.brutusin.commons.search.FacetValueResponse;
+import org.brutusin.fleadb.facet.FacetMultiplicities;
+import org.brutusin.fleadb.facet.FacetResponse;
+import org.brutusin.fleadb.facet.FacetValueResponse;
 import org.brutusin.fleadb.FleaDB;
 import org.brutusin.fleadb.FleaDBInfo;
 import org.brutusin.fleadb.Schema;
@@ -65,11 +65,10 @@ public final class GenericFleaDB implements FleaDB<JsonNode> {
     public static final Version LUCENE_VERSION = Version.LUCENE_4_10_3;
 
     private final FleaDBInfo dsInfo;
-    private final GenericTransformer transformer;
+    private final JsonTransformer transformer;
     private final Directory indexDir;
     private final Directory facetDir;
     private final File indexFolder;
-    private final String[] allFacetNames;
 
     private FacetsConfig facetsConfig;
 
@@ -131,18 +130,13 @@ public final class GenericFleaDB implements FleaDB<JsonNode> {
                 this.indexDir = FSDirectory.open(indexFolder);
                 this.facetDir = FSDirectory.open(new File(indexFolder, "facets"));
             }
-            this.transformer = new GenericTransformer(this.dsInfo.getSchema());
+            this.transformer = new JsonTransformer(this.dsInfo.getSchema());
             this.facetsConfig = new FacetsConfig();
             Map<String, Boolean> facets = getSchema().getFacetFields();
             for (Map.Entry<String, Boolean> entry : facets.entrySet()) {
                 String facet = entry.getKey();
                 Boolean multievaluated = entry.getValue();
                 facetsConfig.setMultiValued(facet, multievaluated);
-            }
-            this.allFacetNames = new String[this.dsInfo.getSchema().getFacetFields().size()];
-            int i = 0;
-            for (String facet : this.dsInfo.getSchema().getFacetFields().keySet()) {
-                this.allFacetNames[i++] = facet;
             }
         } catch (Throwable th) {
             close();
@@ -260,107 +254,84 @@ public final class GenericFleaDB implements FleaDB<JsonNode> {
 
     @Override
     public final List<FacetResponse> getFacetValues(final Query q, int maxFacetValues) {
-        try {
-            verifyNotClosed();
-            if (this.allFacetNames.length == 0) {
-                return null;
-            }
-            int[] maxFacetValuesArr = new int[allFacetNames.length];
-            for (int i = 0; i < maxFacetValuesArr.length; i++) {
-                maxFacetValuesArr[i] = maxFacetValues;
-            }
-            return getFacetValues(q, allFacetNames, maxFacetValuesArr);
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
+        verifyNotClosed();
+        if (getSchema().getFacetFields().isEmpty()) {
+            return null;
         }
-    }
-
-    @Override
-    public final List<FacetResponse> getFacetValues(final Query q, ActiveFacetMap facets) {
-        try {
-            if (facets == null) {
-                facets = new ActiveFacetMap();
+        FacetMultiplicities facetMultiplicities = null;
+        for (Map.Entry<String, Boolean> entry : getSchema().getFacetFields().entrySet()) {
+            String facetName = entry.getKey();
+            if (facetMultiplicities == null) {
+                facetMultiplicities = FacetMultiplicities.set(facetName, maxFacetValues);
+            } else {
+                facetMultiplicities.and(facetName, maxFacetValues);
             }
-            String[] facetNames = new String[facets.size()];
-            int[] maxFacetValues = new int[facets.size()];
-            int i = 0;
-            for (Map.Entry<String, Integer> entry : facets.entrySet()) {
-                String facet = entry.getKey();
-                Integer integer = entry.getValue();
-                facetNames[i] = facet;
-                maxFacetValues[i] = integer;
-                i++;
-            }
-            return getFacetValues(q, facetNames, maxFacetValues);
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
         }
+        return getFacetValues(q, facetMultiplicities);
     }
 
     @Override
     public int getNumFacetValues(final Query q, final String facetName) {
+        List<FacetResponse> frs = getFacetValues(q, FacetMultiplicities.set(facetName, 1));
+        return frs.get(0).getNumFacetValues();
+    }
+
+    @Override
+    public final List<FacetResponse> getFacetValues(final Query q, FacetMultiplicities facetMultiplicities) {
+        verifyNotClosed();
+        if (facetMultiplicities == null) {
+            return null;
+        }
         try {
-            List<FacetResponse> frs = getFacetValues(q, new String[]{facetName}, new int[]{1});
-            return frs.get(0).getNumFacetValues();
+            List<FacetResponse> ret = new ArrayList<FacetResponse>();
+            FacetsCollector facetCollector = new FacetsCollector();
+            getIndexSearcher().search(q.getLuceneQuery(getSchema()), facetCollector);
+            FacetsConfig config = new FacetsConfig();
+            FastTaxonomyFacetCounts facets = new FastTaxonomyFacetCounts(getTaxonomyReader(), config, facetCollector);
+
+            Map<String, Integer> facetMap = facetMultiplicities.getFacetMap(getSchema());
+            for (Map.Entry<String, Integer> entry : facetMap.entrySet()) {
+                String facetName = entry.getKey();
+                Integer multiplicity = entry.getValue();
+                FacetResult res = facets.getTopChildren(multiplicity, facetName);
+                if (res != null) {
+                    FacetResponse fr = new FacetResponse(facetName);
+                    fr.setNumFacetValues(res.childCount);
+                    ret.add(fr);
+                    LabelAndValue[] lvs = res.labelValues;
+                    for (int j = 0; j < lvs.length; j++) {
+                        LabelAndValue lv = lvs[j];
+                        FacetValueResponse fvresp = new FacetValueResponse(lv.label, lv.value.doubleValue());
+                        fr.getFacetValues().add(fvresp);
+                    }
+                } else {
+                    FacetResponse fr = new FacetResponse(facetName);
+                    fr.setNumFacetValues(0);
+                    ret.add(fr);
+                }
+            }
+            return ret;
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
-    }
-
-    private final List<FacetResponse> getFacetValues(final Query q, String[] facetNames, int[] maxFacetValues) throws IOException {
-        verifyNotClosed();
-        if (facetNames == null || facetNames.length == 0) {
-            return null;
-        }
-
-        List<FacetResponse> ret = new ArrayList<FacetResponse>();
-        FacetsCollector facetCollector = new FacetsCollector();
-        getIndexSearcher().search(q.getLuceneQuery(getSchema()), facetCollector);
-        FacetsConfig config = new FacetsConfig();
-        FastTaxonomyFacetCounts facets = new FastTaxonomyFacetCounts(getTaxonomyReader(), config, facetCollector);
-
-        for (int i = 0; i < facetNames.length; i++) {
-            String facetName = facetNames[i];
-            FacetResult res = facets.getTopChildren(maxFacetValues[i], facetName);
-            if (res != null) {
-                FacetResponse fr = new FacetResponse(facetName);
-                fr.setNumFacetValues(res.childCount);
-                ret.add(fr);
-                LabelAndValue[] lvs = res.labelValues;
-                for (int j = 0; j < lvs.length; j++) {
-                    LabelAndValue lv = lvs[j];
-                    FacetValueResponse fvresp = new FacetValueResponse(lv.label, lv.value.doubleValue());
-                    fr.getFacetValues().add(fvresp);
-                }
-            } else {
-                FacetResponse fr = new FacetResponse(facetName);
-                fr.setNumFacetValues(0);
-                ret.add(fr);
-            }
-        }
-        return ret;
     }
 
     @Override
     public final List<FacetResponse> getFacetValuesStartingWith(String facetName, final String prefix, Query q, int max) {
-        try {
-            verifyNotClosed();
-            BooleanQuery bq = new BooleanQuery();
-            bq.add(q, BooleanClause.Occur.MUST);
+        verifyNotClosed();
+        BooleanQuery bq = new BooleanQuery();
+        bq.add(q, BooleanClause.Occur.MUST);
 
-            List<FacetResponse> startingResponse = getFacetValues(bq, new String[]{facetName}, new int[]{max});
-            if (prefix != null) {
-                double exactMultiplicity = getFacetValueMultiplicity(facetName, prefix, q);
-                if (exactMultiplicity > 0) {
-                    FacetValueResponse exactMatch = new FacetValueResponse(prefix, exactMultiplicity);
-                    startingResponse.get(0).getFacetValues().remove(exactMatch);
-                    startingResponse.get(0).getFacetValues().add(0, exactMatch);
-                }
+        List<FacetResponse> startingResponse = getFacetValues(bq, FacetMultiplicities.set(facetName, max));
+        if (prefix != null) {
+            double exactMultiplicity = getFacetValueMultiplicity(facetName, prefix, q);
+            if (exactMultiplicity > 0) {
+                FacetValueResponse exactMatch = new FacetValueResponse(prefix, exactMultiplicity);
+                startingResponse.get(0).getFacetValues().remove(exactMatch);
+                startingResponse.get(0).getFacetValues().add(0, exactMatch);
             }
-            return startingResponse;
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
         }
+        return startingResponse;
     }
 
     @Override

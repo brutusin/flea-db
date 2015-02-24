@@ -22,8 +22,8 @@ import java.util.List;
 import org.brutusin.commons.json.ParseException;
 import org.brutusin.commons.json.spi.JsonCodec;
 import org.brutusin.commons.json.spi.JsonNode;
-import org.brutusin.commons.search.ActiveFacetMap;
-import org.brutusin.commons.search.FacetResponse;
+import org.brutusin.fleadb.facet.FacetMultiplicities;
+import org.brutusin.fleadb.facet.FacetResponse;
 import org.brutusin.fleadb.FleaDB;
 import org.brutusin.fleadb.FleaDBInfo;
 import org.brutusin.fleadb.Schema;
@@ -114,7 +114,7 @@ public final class ObjectFleaDB<E> implements FleaDB<E> {
     }
 
     @Override
-    public final List<FacetResponse> getFacetValues(Query q, ActiveFacetMap facets) {
+    public final List<FacetResponse> getFacetValues(Query q, FacetMultiplicities facets) {
         return genericFleaDB.getFacetValues(q, facets);
     }
 

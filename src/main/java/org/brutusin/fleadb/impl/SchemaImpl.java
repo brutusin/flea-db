@@ -215,7 +215,7 @@ public class SchemaImpl implements Schema {
         System.out.println(facetFields1);
         System.out.println("---");
         JsonNode node = JsonCodec.getInstance().parse("{\"map\":{\"aa\":{\"int1\":3,\"booleanMap\":{\"key1\":true},\"s1\":\"s11Value\",\"s2\":[\"s2Value11\",\"s2Value21\"]},\"bb\":{\"booleanMap\":{\"key2\":false},\"s1\":\"s12Value\",\"s2\":[\"s2Value12\",\"s2Value22\"]}}}{\"map\":{\"aa\":{\"booleanMap\":{\"key1\":true},\"s1\":\"s11Value\",\"s2\":[\"s2Value11\",\"s2Value21\"]},\"bb\":{\"booleanMap\":{\"key2\":false},\"s1\":\"s12Value\",\"s2\":[\"s2Value12\",\"s2Value22\"]}}}");
-        GenericTransformer transformer = new GenericTransformer(s);
+        JsonTransformer transformer = new JsonTransformer(s);
         Pair<Document, List<FacetField>> entityToDocument = transformer.entityToDocument(node);
         System.out.println(entityToDocument);
     }

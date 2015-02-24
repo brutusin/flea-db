@@ -28,8 +28,8 @@ import org.apache.lucene.document.StringField;
 import org.apache.lucene.facet.FacetField;
 import org.apache.lucene.index.IndexableField;
 import org.brutusin.commons.Pair;
+import org.brutusin.commons.json.ValidationException;
 import org.brutusin.commons.json.impl.LazyJsonNode;
-import org.brutusin.commons.json.spi.JsonCodec;
 import org.brutusin.commons.json.spi.JsonNode;
 import org.brutusin.commons.json.spi.JsonSchema;
 import org.brutusin.fleadb.DocTransformer;
@@ -40,7 +40,7 @@ import org.brutusin.fleadb.utils.Expression;
  *
  * @author Ignacio del Valle Alles idelvall@brutusin.org
  */
-public class GenericTransformer implements DocTransformer<JsonNode> {
+public class JsonTransformer implements DocTransformer<JsonNode> {
 
     private static final FieldType NON_INDEXED_TYPE = new FieldType();
     private static final String OBJECT_FIELD_NAME = "$json";
@@ -53,7 +53,7 @@ public class GenericTransformer implements DocTransformer<JsonNode> {
     private final Schema schema;
     private final JsonSchema jsonSchema;
 
-    public GenericTransformer(Schema schema) {
+    public JsonTransformer(Schema schema) {
         this.schema = schema;
         try {
             if (schema != null) {
@@ -72,7 +72,7 @@ public class GenericTransformer implements DocTransformer<JsonNode> {
         }
         try {
             jsonSchema.validate(jsonNode);
-        } catch (Exception e) {
+        } catch (ValidationException e) {
             throw new RuntimeException("Error transforming entity: " + jsonNode, e);
         }
         Document doc = new Document();
@@ -83,8 +83,7 @@ public class GenericTransformer implements DocTransformer<JsonNode> {
         ret.setElement2(indexTerms.getElement2());
 
         List<IndexableField> indexFields = indexTerms.getElement1();
-        for (int i = 0; i < indexFields.size(); i++) {
-            IndexableField field = indexFields.get(i);
+        for (IndexableField field : indexFields) {
             doc.add(field);
         }
         return ret;
