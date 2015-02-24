@@ -85,7 +85,8 @@ Standard JSON schema specification has been extended to declare indexable proper
 }
 ```
 * `"index":"index"`: Means that the property is indexed by Lucene under a field with name set according to the rules explained in [nomenclature section](#indexed-fields-nomenclature).
-* `"index":"facet"`: Means that the property is indexed as in the previous case, but also a facet is created with this field name
+* `"index":"facet"`: Means that the property is indexed as in the previous case, but also a facet is created with this field name.
+
 ###Annotations
 See [JSON SPI](https://github.com/brutusin/commons/blob/master/README.md#json-spi) for supported annotations used in the strong-typed scenario.
 
