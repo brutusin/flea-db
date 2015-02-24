@@ -6,55 +6,6 @@ A tiny, embeddable, schema-full, java-based, object database supporting paginati
 
 Built on top of [Apache Lucene](http://lucene.apache.org/core/).
 
-**Examples:** 
-```java 
-// Create object database
-FleaDB<Record> db = new ObjectFleaDB(indexFolder, Record.class);
-
-// Store records
-for (int i = 0; i < REC_NO; i++) {
-    Record r = new Record();
-    // ... populate record
-    db.store(r);
-}
-db.commit();
-
-// Query records
-Query q = Query.createTermQuery("$.id", "0");
-Paginator<Record> paginator = db.query(q);
-int totalPages = paginator.getTotalPages(pageSize);
-for (int i = 1; i <= totalPages; i++) {
-    List<Record> page = paginator.getPage(i, pageSize);
-    for (int j = 0; j < page.size(); j++) {
-        Record r = page.get(j);
-        System.out.println(r);
-    }
-}
-db.close();
-``` 
-
-```java 
-// Generic interaction with the previously created database
-FleaDB<JsonNode> gdb = new GenericFleaDB(indexFolder);
-
-// Both for storing ...
-JsonNode json = JsonCodec.getInstance.parse("...");
-gdb.store(json);
-gdb.commit();
-
-// ... and querying:
-Paginator<JsonRecord> paginator = gdb.query(q); // same query instance
-totalPages = paginator.getTotalPages(pageSize);
-for (int i = 1; i <= totalPages; i++) {
-    List<JsonRecord> page = paginator.getPage(i, pageSize);
-    for (int j = 0; j < page.size(); j++) {
-        JsonRecord json = page.get(j);
-        System.out.println(json);
-    }
-}
-gdb.close();
-```
-
 ##Main features
 * **Schema-full**: Based on [JSON Schema](http://json-schema.org/).
 * **Strong typed API**: Using `<E>` for records and generating database schema from `Class<E>`.
@@ -102,8 +53,57 @@ Nested property| `$.header.id`
 Array property| `$.items[#]`
 Map property (additionalProperty in schema)| `$.map` for keys and `$.map[*]` for values
 
-##Example tests
-See available [test classes](src/test/java/org/brutusin/fleadb/impl/) for more details.
+##Examples
+### **String-typed API**
+```java 
+// Create object database
+FleaDB<Record> db = new ObjectFleaDB(indexFolder, Record.class);
+
+// Store records
+for (int i = 0; i < REC_NO; i++) {
+    Record r = new Record();
+    // ... populate record
+    db.store(r);
+}
+db.commit();
+
+// Query records
+Query q = Query.createTermQuery("$.id", "0");
+Paginator<Record> paginator = db.query(q);
+int totalPages = paginator.getTotalPages(pageSize);
+for (int i = 1; i <= totalPages; i++) {
+    List<Record> page = paginator.getPage(i, pageSize);
+    for (int j = 0; j < page.size(); j++) {
+        Record r = page.get(j);
+        System.out.println(r);
+    }
+}
+db.close();
+``` 
+### **Generic API**
+```java 
+// Generic interaction with the previously created database
+FleaDB<JsonNode> gdb = new GenericFleaDB(indexFolder);
+
+// Both for storing ...
+JsonNode json = JsonCodec.getInstance.parse("...");
+gdb.store(json);
+gdb.commit();
+
+// ... and querying:
+Paginator<JsonRecord> paginator = gdb.query(q); // same query instance
+totalPages = paginator.getTotalPages(pageSize);
+for (int i = 1; i <= totalPages; i++) {
+    List<JsonRecord> page = paginator.getPage(i, pageSize);
+    for (int j = 0; j < page.size(); j++) {
+        JsonRecord json = page.get(j);
+        System.out.println(json);
+    }
+}
+gdb.close();
+```
+
+See available [test classes](src/test/java/org/brutusin/fleadb/impl/) for more examples.
 
 ##Main stack
 This module could not be possible without:
