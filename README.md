@@ -92,6 +92,7 @@ See [JSON SPI](https://github.com/brutusin/commons/blob/master/README.md#json-sp
 
 ###Indexed fields nomenclature
 Databases are self descriptive, they provide information of their schema and indexed fields. Nevertheless, the nomenclature of the fields is defined as follows:
+
 Case | Java  | JsonSchema | Example field name
 -----| ------|------------|-------------------
 Simple property| `@IndexableProperty int age` | `"age":{"type":"integer","index":"index"} ` | `$.age`
