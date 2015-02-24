@@ -63,15 +63,15 @@ gdb.close();
 * **Faceted search**
 * **In memory/persistent versions**
 
-
-##Example
-See available [test classes](src/test/java/org/brutusin/fleadb/impl/) for more details.
-
-## Implementation details
+## Schema
 ###JSON SPI
 This module makes use of the [JSON SPI](https://github.com/brutusin/commons/tree/master/src/main/java/org/brutusin/commons/json/spi), so a JSON service provider like [json-codec-jackson](https://github.com/brutusin/json-codec-jackson) is needed at runtime. The choosen provider will determine JSON serialization, validation, parsing and schema generation.
 ###JSON Schema extension
+###`@IndexableProperty`
 ###Field name nomenclature
+
+##Example tests
+See available [test classes](src/test/java/org/brutusin/fleadb/impl/) for more details.
 
 ##Main stack
 This module could not be possible without:
