@@ -29,8 +29,7 @@ import org.brutusin.commons.utils.Miscellaneous;
 import static org.brutusin.commons.utils.Miscellaneous.countMatches;
 
 /**
- * A compiled and validated expression, containing the expression elements in an
- * inner queue.
+ * A compiled and validated expression.
  * <br/><br/>Example:
  * <br/><pre><code>
  *     Expression exp = Expression.compile("$.map[\"akey\"].array[*]");
