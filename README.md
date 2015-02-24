@@ -54,7 +54,7 @@ Array property| `$.items[#]`
 Map property (additionalProperty in schema)| `$.map` for keys and `$.map[*]` for values
 
 ##Examples
-### **String-typed API**
+### **Strong-typed API**
 ```java 
 // Create object database
 FleaDB<Record> db = new ObjectFleaDB(indexFolder, Record.class);
