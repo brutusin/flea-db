@@ -68,7 +68,7 @@ gdb.close();
 This module makes use of the [JSON SPI](https://github.com/brutusin/commons/blob/master/README.md#json-spi), so a JSON service provider like [json-codec-jackson](https://github.com/brutusin/json-codec-jackson) is needed at runtime. The choosen provider will determine JSON serialization, validation, parsing and schema generation.
 
 ###JSON Schema extension
-Standard JSON schema specification has been extended to declare indexable properties (`index` schema property):
+Standard JSON schema specification has been extended to declare indexable properties (`"index":"index"` and `"index":"facet"` options):
 ```json
 {
   "type": "object",
