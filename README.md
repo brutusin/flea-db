@@ -55,7 +55,7 @@ gdb.close();
 
 ##Main features
 * **Schema-full**: Based on [JSON Schema](http://json-schema.org/).
-* **Object-mapping API**: Using `<E>` for records and generating database schema from `Class<E>`.
+* **Strong typed API**: Using `<E>` for records and generating database schema from `Class<E>`.
 * **Generic API**: Using JSON for records and JSON Schema for database schema.
 * **Record validation**
 * **Field name and type validation**: For queries and sorting.
