@@ -4,7 +4,7 @@
 
 A tiny, embeddable, schema-full, java-based, object database supporting pagination, faceted search, and both strong-typed and generic API's. Built on top of Apache Lucene.
 
-**Example:** 
+**Examples:** 
 ```java 
 // Create object database
 FleaDB<Record> db = new ObjectFleaDB(indexFolder, Record.class);
@@ -29,7 +29,9 @@ for (int i = 1; i <= totalPages; i++) {
     }
 }
 db.close();
+``` 
 
+```java 
 // Generic interaction with the previously created database
 FleaDB<JsonNode> gdb = new GenericFleaDB(indexFolder);
 
