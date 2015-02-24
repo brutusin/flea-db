@@ -59,8 +59,8 @@ gdb.close();
 * **Generic API**: Using JSON for records and JSON Schema for database schema.
 * **Record validation**
 * **Field name and type validation**: For queries and sorting.
-* **Pagination**
-* [**Faceted search**](http://en.wikipedia.org/wiki/Faceted_search): Powered by [lucene-facet](http://lucene.apache.org/core/4_10_3/facet/index.html)
+* [**Pagination**](http://en.wikipedia.org/wiki/Pagination#Pagination_in_web_content)
+* [**Faceted search**](http://en.wikipedia.org/wiki/Faceted_search): Powered by [lucene-facet](http://lucene.apache.org/core/4_10_3/facet/index.html).
 * **In memory/persistent versions**
 
 ## Schema
