@@ -60,7 +60,7 @@ gdb.close();
 * **Record validation**
 * **Field name and type validation**: For queries and sorting.
 * **Pagination**
-* **Faceted search**
+* [**Faceted search**](http://en.wikipedia.org/wiki/Faceted_search): Powered by [lucene-facet](http://lucene.apache.org/core/4_10_3/facet/index.html)
 * **In memory/persistent versions**
 
 ## Schema
