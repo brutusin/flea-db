@@ -65,11 +65,11 @@ gdb.close();
 
 ## Schema
 ###JSON SPI
-This module makes use of the [JSON SPI](https://github.com/brutusin/commons/tree/master/src/main/java/org/brutusin/commons/json/spi), so a JSON service provider like [json-codec-jackson](https://github.com/brutusin/json-codec-jackson) is needed at runtime. The choosen provider will determine JSON serialization, validation, parsing and schema generation.
+This module makes use of the [JSON SPI](https://github.com/brutusin/commons/blob/master/README.md#json-spi), so a JSON service provider like [json-codec-jackson](https://github.com/brutusin/json-codec-jackson) is needed at runtime. The choosen provider will determine JSON serialization, validation, parsing and schema generation.
 
 ###JSON Schema extension
 Standard JSON schema specification has been extended to declare indexable properties (`index` schema property):
-```xml
+```json
 {
   "type": "object",
   "properties": {
@@ -84,7 +84,8 @@ Standard JSON schema specification has been extended to declare indexable proper
   }
 }
 ```
-###`@IndexableProperty`
+###Annotations
+See [JSON SPI](https://github.com/brutusin/commons/blob/master/README.md#json-spi) for supported annotations used in the strong-typed scenario.
 
 ###Indexed fields nomenclature
 
