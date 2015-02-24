@@ -93,7 +93,7 @@ See [JSON SPI](https://github.com/brutusin/commons/blob/master/README.md#json-sp
 ###Indexed fields nomenclature
 Databases are self descriptive, they provide information of their schema and indexed fields. Nevertheless, the nomenclature of the fields is defined as follows:
 
-Case | field name
+Case | Field name
 -----| ---------
 Simple property| `$.id`
 Nested property| `$.header.id`
