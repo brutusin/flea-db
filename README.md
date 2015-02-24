@@ -91,6 +91,10 @@ Standard JSON schema specification has been extended to declare indexable proper
 See [JSON SPI](https://github.com/brutusin/commons/blob/master/README.md#json-spi) for supported annotations used in the strong-typed scenario.
 
 ###Indexed fields nomenclature
+Databases are self descriptive, they provide information of their schema and indexed fields. Nevertheless, the nomenclature of the fields is defined as follows:
+Case | Java  | JsonSchema | Example field name
+-----| ------|------------|-------------------
+Simple property| `@IndexableProperty int age` | `"age":{"type":"integer","index":"index"} ` | `$.age`
 
 ##Example tests
 See available [test classes](src/test/java/org/brutusin/fleadb/impl/) for more details.
