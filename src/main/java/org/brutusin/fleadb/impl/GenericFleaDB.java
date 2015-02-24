@@ -57,6 +57,8 @@ import org.brutusin.fleadb.query.Query;
 import org.brutusin.fleadb.sort.Sort;
 
 /**
+ * A generic FleaDB, that allows dynamic interaction with databases, using JSON
+ * syntax.
  *
  * @author Ignacio del Valle Alles idelvall@brutusin.org
  */
@@ -81,14 +83,35 @@ public final class GenericFleaDB implements FleaDB<JsonNode> {
     private volatile TaxonomyReader taxonomyReader;
     private volatile TaxonomyWriter taxonomyWriter;
 
+    /**
+     * Creates an in-memory instance with a Schema determined by the specified
+     * JsonSchema.
+     *
+     * @param jsonSchema
+     * @throws IOException
+     */
     public GenericFleaDB(JsonSchema jsonSchema) throws IOException {
         this(null, jsonSchema);
     }
 
+    /**
+     * Opens an existing database.
+     *
+     * @param indexFolder
+     * @throws IOException
+     */
     public GenericFleaDB(File indexFolder) throws IOException {
         this(indexFolder, null);
     }
 
+    /**
+     * Creates a persistent database with a Schema determined by the specified
+     * JsonSchema.
+     *
+     * @param indexFolder
+     * @param jsonSchema
+     * @throws IOException
+     */
     public GenericFleaDB(File indexFolder, JsonSchema jsonSchema) throws IOException {
         try {
             this.indexFolder = indexFolder;

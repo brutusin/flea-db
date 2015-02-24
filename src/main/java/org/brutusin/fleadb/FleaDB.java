@@ -23,6 +23,7 @@ import org.brutusin.fleadb.query.Query;
 import org.brutusin.fleadb.sort.Sort;
 
 /**
+ * flea-db functionality.
  *
  * @author Ignacio del Valle Alles idelvall@brutusin.org
  */
@@ -31,7 +32,7 @@ public interface FleaDB<E> {
     public E getSingleResult(final Query q);
 
     public Paginator<E> query(final Query q);
-    
+
     public Paginator<E> query(final Query q, final Sort sort);
 
     public void store(E entity);

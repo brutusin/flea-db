@@ -32,18 +32,34 @@ import org.brutusin.fleadb.query.Query;
 import org.brutusin.fleadb.sort.Sort;
 
 /**
+ * A strong typed FleaDB database
  *
  * @author Ignacio del Valle Alles idelvall@brutusin.org
+ * @param <E> Record type
  */
 public final class ObjectFleaDB<E> implements FleaDB<E> {
 
     private final GenericFleaDB genericFleaDB;
     private final Class<E> clazz;
 
+    /**
+     * Creates an in-memory instance with a Schema determined by the specified
+     * record class.
+     *
+     * @param clazz
+     * @throws IOException
+     */
     public ObjectFleaDB(Class<E> clazz) throws IOException {
         this(null, clazz);
     }
 
+    /**
+     * Opens an existing persistent database or creates a new one.
+     *
+     * @param indexFolder
+     * @param clazz
+     * @throws IOException
+     */
     public ObjectFleaDB(File indexFolder, Class<E> clazz) throws IOException {
         this.genericFleaDB = new GenericFleaDB(indexFolder, JsonCodec.getInstance().getSchema(clazz));
         this.clazz = clazz;
