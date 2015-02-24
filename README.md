@@ -2,7 +2,7 @@
 
 -*Documentation under development. Not released to maven-central yet*-
 
-A tiny, embeddable, schema-full, java-based, object database supporting pagination, faceted search, and both object-mapping and generic API's. Built on top of Apache Lucene.
+A tiny, embeddable, schema-full, java-based, object database supporting pagination, faceted search, and both strong-typed and generic API's. Built on top of Apache Lucene.
 
 **Example:** 
 ```java 
@@ -59,7 +59,7 @@ gdb.close();
 * **Field name and type validation**: For queries and sorting.
 * **Pagination**
 * **Faceted search**
-* **In memory/disk versions**
+* **In memory/persistent versions**
 
 
 ##Example
