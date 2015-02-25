@@ -6,6 +6,33 @@ A java library for creating standalone, portable, schema-full object databases s
 
 Built on top of [Apache Lucene](http://lucene.apache.org/core/).
 
+**Table of Contents** 
+
+- [org.brutusin:flea-db](#)
+  - [Motivation](#)
+  - [Main features](#)
+  - [APIs](#)
+    - [GenericFleaDB](#)
+    - [ObjectFleaDB](#)
+	- [Schema](#)
+        - [JSON SPI](#)
+        - [JSON Schema extension](#)
+		- [Annotations](#)
+		- [Indexed fields nomenclature](#)
+	- [Usage](#)
+		- [Database persistence](#)
+		- [Store and commit](#)
+		- [Queries and sort order](#)
+		- [Pagination](#)
+		- [Faceting](#)
+		- [Closing](#)
+	- [Example tests](#)
+	- [Main stack](#)
+	- [Currently used Lucene version](#)
+	- [Support, bugs and requests](#)
+	- [Authors](#)
+	- [License](#)
+
 ##Motivation
 * Lucene is a powerful low level library, but its API is not very easy to understand.  
 * Putting schemas into play, self-description can be used to simplify API (fields type), and enables the creation of flexible and generic downstream components.
