@@ -6,6 +6,11 @@ A tiny, embeddable, schema-full, java-based, **object database** supporting pagi
 
 Built on top of [Apache Lucene](http://lucene.apache.org/core/).
 
+##Motivation
+* Lucene is a powerful low level library, but its API is not very easy to understand.  
+* Putting schemas into play, self-description can be used to simplify API (fields type), and enables the creation of flexible and generic downstream components.
+* Lucene has a lot of experimental APIs that may (and use to) change in time. This library adds a level of indirection. providing a stable high level interface. Upgrades in the underlying Lucene version are absorved by flea-db
+
 ##Main features
 * **Schema-full**: Based on [JSON Schema](http://json-schema.org/).
 * **Strong-typed API**: Using `<E>` for records and generating database schema from `Class<E>`.
@@ -15,11 +20,6 @@ Built on top of [Apache Lucene](http://lucene.apache.org/core/).
 * [**Pagination**](http://en.wikipedia.org/wiki/Pagination#Pagination_in_web_content)
 * [**Faceted search**](http://en.wikipedia.org/wiki/Faceted_search): Powered by [lucene-facet](http://lucene.apache.org/core/4_10_3/facet/index.html).
 * **In memory/persistent versions**
- 
-##Motivation
-* Lucene is a powerful low level library, but its API is not very easy to understand.  
-* Putting schemas into play, self-description can be used to simplify API (fields type), and enables the creation of flexible and generic downstream components.
-* Lucene has a lot of experimental APIs that may (and use to) change in time. This library adds a level of indirection. providing a stable high level interface. Upgrades in the underlying Lucene version are absorved by flea-db
 
 ##APIs
 *flea-db* functionality is defined in the interface [FleaDB](src/main/java/org/brutusin/fleadb/FleaDB.java). 
