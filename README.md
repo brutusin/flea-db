@@ -51,7 +51,7 @@ Built on top of [Apache Lucene](http://lucene.apache.org/core/).
 * **In memory/persistent versions**
 
 ##APIs
-*flea-db* functionality is defined by the interface: [FleaDB](src/main/java/org/brutusin/fleadb/FleaDB.java). 
+All *flea-db* functionality is defined by [FleaDB](src/main/java/org/brutusin/fleadb/FleaDB.java) interface. 
 
 The library provides two implementations for it:
 
