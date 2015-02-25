@@ -26,6 +26,7 @@ import org.brutusin.fleadb.sort.Sort;
  * flea-db functionality.
  *
  * @author Ignacio del Valle Alles idelvall@brutusin.org
+ * @param <E> Generic record type
  */
 public interface FleaDB<E> {
 
