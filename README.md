@@ -22,13 +22,13 @@ Built on top of [Apache Lucene](http://lucene.apache.org/core/).
   - [Usage](#usage)
     - [Database persistence](#database-persistence)
     - [Store and commit](#store-and-commit)
-    - [Queries and sort order](#)
-    - [Pagination](#)
-    - [Faceting](#)
-    - [Closing](#)
-  - [Example tests](#)
-  - [Main stack](#)
-  - [Currently used Lucene version](#)
+    - [Queries and sorting](#queries-and-sorting)
+    - [Pagination](#pagination)
+    - [Faceting](#faceting)
+    - [Closing](#closing)
+  - [Example tests](#example-tests)
+  - [Main stack](#main-stack)
+  - [Lucene version](#lucene-version)
   - [Support, bugs and requests](#)
   - [Authors](#)
   - [License](#)
@@ -155,7 +155,7 @@ Map property (additionalProperty in schema)| `$.map` for keys and `$.map[*]` for
 ##Usage
 ### Database persistence
 ### Store and commit
-### Queries and sort order
+### Queries and sorting
 ### Pagination
 ### Faceting
 ### Closing
@@ -171,7 +171,7 @@ This module could not be possible without:
   * [com.fasterxml.jackson.module:jackson-module-jsonSchema](https://github.com/FasterXML/jackson-module-jsonSchema): For java class to JSON schema mapping.
   * [com.github.fge:json-schema-validator](https://github.com/fge/json-schema-validator): For validation against a JSON schema.
 
-##Currently used Lucene version
+##Lucene version
 `4.10.3` (Dec, 2014)
 
 ## Support, bugs and requests
