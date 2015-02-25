@@ -23,9 +23,10 @@ Built on top of [Apache Lucene](http://lucene.apache.org/core/).
 [GenericFleaDB](src/main/java/org/brutusin/fleadb/impl/GenericFleaDB.java) is the lowest level implementation that directly uses *Apache Lucene* and [JSON SPI](https://github.com/brutusin/commons/blob/master/README.md#json-spi) to maintain two different indexes (one for the terms and other for the taxonomy), hyding the underlying complexity from the user perspective.
 
 This is how it works:
-* **On instantiation**: A `JsonSchema` (from  [JSON SPI](https://github.com/brutusin/commons/blob/master/README.md#json-spi)) and an index folder are passed depending on the database being newly created and persistent. Then the json schema (passed or readed from the existing database `flea.json` descriptor file) is processed, looking for its [`index`](#json-schema-extension) properties, and finally a [Schema](src/main/java/org/brutusin/fleadb/Schema.java) is created.
-* **On storing**: The passed `JsonNode` record is validated against the JSON schema. Then a [JsonTransformer](src/main/java/org/brutusin/fleadb/impl/JsonTransformer.java) instance (making use of the processed db schema) transforms the records in term understandable by Lucene (Document, Fields, FacetField ...) and finally the storage is delegated to the lucene API.
-* A Lucene document is created from the input JSON with a payload storable field and indexed fields defined by the JSON schema.
+* **On instantiation**: A `JsonSchema` (from  [JSON SPI](https://github.com/brutusin/commons/blob/master/README.md#json-spi)) and an index folder are passed depending on the database being newly created and persistent. Then the JSON schema (passed or readed from the existing database `flea.json` descriptor file) is processed, looking for its [`index`](#json-schema-extension) properties, and finally a database [Schema](src/main/java/org/brutusin/fleadb/Schema.java) is created.
+* **On storing**: The passed `JsonNode` record is validated against the JSON schema. Then a [JsonTransformer](src/main/java/org/brutusin/fleadb/impl/JsonTransformer.java) instance (making use of the processed database schema) transforms the records in terms understandable by Lucene (Document, Fields, FacetField ...) and finally the storage is delegated to the Lucene API.
+* **On querying**: 
+The [query](#src/main/java/org/brutusin/fleadb/query) and [Sort](src/main/java/org/brutusin/fleadb/sort/Sort.java) objects are transformed into terms understandable by Lucene making use of the database schema.
 ```java 
 // Generic interaction with the previously created database
 FleaDB<JsonNode> gdb = new GenericFleaDB(indexFolder);
