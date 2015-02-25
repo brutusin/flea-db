@@ -32,8 +32,8 @@ The library provides two implementations for it, a low-level generic implementat
 This is how it works:
 * **On instantiation**: A `JsonSchema` (from  [JSON SPI](https://github.com/brutusin/commons/blob/master/README.md#json-spi)) and an index folder are passed depending on whether the database is new and/or persistent. Then the JSON schema (passed or readed from the existing database `flea.json` descriptor file) is processed, looking for its [`index`](#json-schema-extension) properties, and finally a database [Schema](src/main/java/org/brutusin/fleadb/Schema.java) is created.
 * **On storing**: The passed `JsonNode` record is validated against the JSON schema. Then a [JsonTransformer](src/main/java/org/brutusin/fleadb/impl/JsonTransformer.java) instance (making use of the processed database schema) transforms the records in terms understandable by Lucene (Document, Fields, FacetField ...) and finally the storage is delegated to the Lucene API.
-* **On querying**: 
-The [Query](src/main/java/org/brutusin/fleadb/query) and [Sort](src/main/java/org/brutusin/fleadb/sort/Sort.java) objects are transformed into terms understandable by Lucene making use of the database schema. The returned [Paginator](src/main/java/org/brutusin/fleadb/pagination) is basically a wrapper around the underlying luecene `IndexSearcher` and `Query` objects that lazily (on demand) performs searches to the index.
+* **On commit**: Underlying index and taxonomy writters are commited and searchers are refreshed to reflect the changes.
+* **On querying**: The [Query](src/main/java/org/brutusin/fleadb/query) and [Sort](src/main/java/org/brutusin/fleadb/sort/Sort.java) objects are transformed into terms understandable by Lucene making use of the database schema. The returned [Paginator](src/main/java/org/brutusin/fleadb/pagination) is basically a wrapper around the underlying luecene `IndexSearcher` and `Query` objects that lazily (on demand) performs searches to the index.
 
 Example:
 ```java 
@@ -124,6 +124,10 @@ Simple property| `$.id`
 Nested property| `$.header.id`
 Array/Collection property| `$.items[#]`
 Map property (additionalProperty in schema)| `$.map` for keys and `$.map[*]` for values
+
+##Usage
+### Database persistence
+### Store an object
 
 ##Example tests
 
