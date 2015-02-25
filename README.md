@@ -17,7 +17,7 @@ Built on top of [Apache Lucene](http://lucene.apache.org/core/).
 * **In memory/persistent versions**
 
 ##APIs
-*flea-db* functionality is defined in the interface [FleaDB](src/main/java/org/brutusin/fleadb/FleaDB.java). The library provides two implementations for it, a low-level generic implementation [GenericFleaDB](src/main/java/org/brutusin/fleadb/impl/GenericFleaDB.java) and high-level strong-typed implementation [ObjectFleaDB](src/main/java/org/brutusin/fleadb/impl/ObjectFleaDB.java).
+*flea-db* functionality is defined in the interface [FleaDB](src/main/java/org/brutusin/fleadb/FleaDB.java). Besides, the library provides two implementations for it, a low-level generic implementation [GenericFleaDB](src/main/java/org/brutusin/fleadb/impl/GenericFleaDB.java) and high-level strong-typed implementation [ObjectFleaDB](src/main/java/org/brutusin/fleadb/impl/ObjectFleaDB.java).
 
 ## Generic API
 
