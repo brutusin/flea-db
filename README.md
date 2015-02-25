@@ -79,7 +79,7 @@ gdb.store(json);
 gdb.commit();
 
 // Query records
-Paginator<JsonRecord> paginator = gdb.query(q); // same query instance
+Paginator<JsonRecord> paginator = gdb.query(q);
 totalPages = paginator.getTotalPages(pageSize);
 for (int i = 1; i <= totalPages; i++) {
     List<JsonRecord> page = paginator.getPage(i, pageSize);
