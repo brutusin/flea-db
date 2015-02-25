@@ -38,7 +38,7 @@ Built on top of [Apache Lucene](http://lucene.apache.org/core/).
 * Create a library with a very simple API, self-descriptive with high robustness aimed at indexing objects and providing advanced search capabilities, pagination and faceted search. 
 * Originally born with the purpose of indexing raw data files, and (almost) steady data sets.
 * Lucene is an extense and powerful low level library, but its API is not very easy to understand.
-* Putting schemas into play, self-description can be used to simplify API (fields type), and enables the creation of flexible and generic downstream components.
+* Putting schemas into play, self-description can be used to simplify API (fields type), to provide strong validation mechanisms, and to enable the creation of flexible and generic downstream components.
 * Lucene has a lot of experimental APIs that may (and use to) change in time. This library adds a level of indirection. providing a stable high level interface. Upgrades in the underlying Lucene version are absorved by flea-db.
 
 ##Main features
