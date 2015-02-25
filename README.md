@@ -27,6 +27,8 @@ This is how it works:
 * **On storing**: The passed `JsonNode` record is validated against the JSON schema. Then a [JsonTransformer](src/main/java/org/brutusin/fleadb/impl/JsonTransformer.java) instance (making use of the processed database schema) transforms the records in terms understandable by Lucene (Document, Fields, FacetField ...) and finally the storage is delegated to the Lucene API.
 * **On querying**: 
 The [Query](src/main/java/org/brutusin/fleadb/query) and [Sort](src/main/java/org/brutusin/fleadb/sort/Sort.java) objects are transformed into terms understandable by Lucene making use of the database schema. The returned [Paginator](src/main/java/org/brutusin/fleadb/pagination) is basically a wrapper around the underlying luecene `IndexSearcher` and `Query` objects that lazily (on demand) performs searches to the index.
+
+Example:
 ```java 
 // Generic interaction with the previously created database
 FleaDB<JsonNode> gdb = new GenericFleaDB(indexFolder);
