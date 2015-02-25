@@ -17,7 +17,9 @@ Built on top of [Apache Lucene](http://lucene.apache.org/core/).
 * **In memory/persistent versions**
 
 ##APIs
-*flea-db* functionality is defined in the interface [FleaDB](src/main/java/org/brutusin/fleadb/FleaDB.java). Besides, the library provides two implementations for it, a low-level generic implementation [GenericFleaDB](src/main/java/org/brutusin/fleadb/impl/GenericFleaDB.java) and high-level strong-typed implementation [ObjectFleaDB](src/main/java/org/brutusin/fleadb/impl/ObjectFleaDB.java).
+*flea-db* functionality is defined in the interface [FleaDB](src/main/java/org/brutusin/fleadb/FleaDB.java). 
+
+The library provides two implementations for it, a low-level generic implementation [GenericFleaDB](src/main/java/org/brutusin/fleadb/impl/GenericFleaDB.java) and high-level strong-typed implementation [ObjectFleaDB](src/main/java/org/brutusin/fleadb/impl/ObjectFleaDB.java).
 
 ###GenericFleaDB
 [GenericFleaDB](src/main/java/org/brutusin/fleadb/impl/GenericFleaDB.java) is the lowest level implementation that directly uses *Apache Lucene* and [JSON SPI](https://github.com/brutusin/commons/blob/master/README.md#json-spi) to maintain two different indexes (one for the terms and other for the taxonomy), hyding the underlying complexity from the user perspective.
@@ -50,8 +52,12 @@ for (int i = 1; i <= totalPages; i++) {
 }
 gdb.close();
 ```
-##Strong-typed API
-This API allows to deal with records as POJOS. The main 
+###ObjectFleaDB
+[ObjectFleaDB](src/main/java/org/brutusin/fleadb/impl/ObjectFleaDB.java) is built on top of *GenericFleaDB*.
+
+Basically an *ObjectFleaDB* delegates all its functionality to a wrapped *GenericFleaDB* instance, making use of [JSON SPI](https://github.com/brutusin/commons/blob/master/README.md#json-spi) to perform transformations `POJO<->JsonNode` and `Class<->JsonSchema`. This is the reason why all *flea-db* databases can be used with *GenericFleaDB*.
+
+Example:  
 ```java 
 // Create object database
 FleaDB<Record> db = new ObjectFleaDB(indexFolder, Record.class);
@@ -79,7 +85,7 @@ db.close();
 ``` 
 ## Schema
 ###JSON SPI
-This module makes use of the [JSON SPI](https://github.com/brutusin/commons/blob/master/README.md#json-spi), so a JSON service provider like [json-codec-jackson](https://github.com/brutusin/json-codec-jackson) is needed at runtime. The choosen provider will determine JSON serialization, validation, parsing and schema generation.
+As cited before, this library makes use of the [JSON SPI](https://github.com/brutusin/commons/blob/master/README.md#json-spi), so a JSON service provider like [json-codec-jackson](https://github.com/brutusin/json-codec-jackson) is needed at runtime. The choosen provider will determine JSON serialization, validation, parsing and schema generation.
 
 ###JSON Schema extension
 Standard JSON schema specification has been extended to declare indexable properties (`"index":"index"` and `"index":"facet"` options):
