@@ -71,16 +71,16 @@ This is how it works:
 **Example:**
 ```java 
 // Generic interaction with a previously created database
-FleaDB<JsonNode> gdb = new GenericFleaDB(indexFolder);
+FleaDB<JsonNode> db = new GenericFleaDB(indexFolder);
 
 // Store records
 JsonNode json = JsonCodec.getInstance.parse("...");
-gdb.store(json);
-gdb.commit();
+db.store(json);
+db.commit();
 
 // Query records
 Query q = Query.createTermQuery("$.id", "0");
-Paginator<JsonRecord> paginator = gdb.query(q);
+Paginator<JsonRecord> paginator = db.query(q);
 int totalPages = paginator.getTotalPages(pageSize);
 for (int i = 1; i <= totalPages; i++) {
     List<JsonRecord> page = paginator.getPage(i, pageSize);
@@ -89,7 +89,7 @@ for (int i = 1; i <= totalPages; i++) {
         System.out.println(json);
     }
 }
-gdb.close();
+db.close();
 ```
 ###ObjectFleaDB
 [ObjectFleaDB](src/main/java/org/brutusin/fleadb/impl/ObjectFleaDB.java) is built on top of *GenericFleaDB*.
