@@ -2,7 +2,7 @@
 
 -*Documentation under development. Not released to maven-central yet*-
 
-A java library for creating standalone, portable, object databases supporting pagination and faceted search, and offering strong-typed and generic APIs.
+A java library for creating standalone, portable, schema-full object databases supporting pagination and faceted search, and offering strong-typed and generic APIs.
 
 Built on top of [Apache Lucene](http://lucene.apache.org/core/).
 
