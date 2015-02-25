@@ -20,11 +20,11 @@ Built on top of [Apache Lucene](http://lucene.apache.org/core/).
 *flea-db* functionality is defined in the interface [FleaDB](src/main/java/org/brutusin/fleadb/FleaDB.java). Besides, the library provides two implementations for it, a low-level generic implementation [GenericFleaDB](src/main/java/org/brutusin/fleadb/impl/GenericFleaDB.java) and high-level strong-typed implementation [ObjectFleaDB](src/main/java/org/brutusin/fleadb/impl/ObjectFleaDB.java).
 
 ###GenericFleaDB
-This low level implementation uses two Lucene indexes (one for the terms and other for the taxonomy).
+[GenericFleaDB](src/main/java/org/brutusin/fleadb/impl/GenericFleaDB.java) is the lowest level implementation that directly uses *Apache Lucene* and [JSON SPI](https://github.com/brutusin/commons/blob/master/README.md#json-spi)) to maintain two different indexes (one for the terms and other for the taxonomy), hyding the underlying complexity from the user perspective.
 
-How it works:
-* On instantiation: A `JsonSchema` (from  [JSON SPI](https://github.com/brutusin/commons/blob/master/README.md#json-spi)) and an index folder are passed depending on the database being newly created and persistent. Then the json schema (passed or readed from the existing database `flea.json` descriptor file) is processed, looking for its `index` properties (see [JSON Schema extension section](json-schema-extension)), and finally a [Schema](src/main/java/org/brutusin/fleadb/Schema.java) is created.
-* On storing: The passed JsonNode record
+This is how it works:
+* **On instantiation**: A `JsonSchema` (from  [JSON SPI](https://github.com/brutusin/commons/blob/master/README.md#json-spi)) and an index folder are passed depending on the database being newly created and persistent. Then the json schema (passed or readed from the existing database `flea.json` descriptor file) is processed, looking for its `index` properties (see [JSON Schema extension section](json-schema-extension)), and finally a [Schema](src/main/java/org/brutusin/fleadb/Schema.java) is created.
+* **On storing**: The passed JsonNode record
 * A Lucene document is created from the input JSON with a payload storable field and indexed fields defined by the JSON schema.
 ```java 
 // Generic interaction with the previously created database
