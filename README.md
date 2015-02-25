@@ -127,10 +127,13 @@ Map property (additionalProperty in schema)| `$.map` for keys and `$.map[*]` for
 
 ##Usage
 ### Database persistence
-### Store an object
+### Store and commit
+### Queries and sort order
+### Pagination
+### Faceting
+### Closing
 
 ##Example tests
-
 See available [test classes](src/test/java/org/brutusin/fleadb/impl/) for more examples.
 
 ##Main stack
