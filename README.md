@@ -62,7 +62,7 @@ This is how it works:
 * **On commit**: Underlying index and taxonomy writters are commited and searchers are refreshed to reflect the changes.
 * **On querying**: The [Query](src/main/java/org/brutusin/fleadb/query) and [Sort](src/main/java/org/brutusin/fleadb/sort/Sort.java) objects are transformed into terms understandable by Lucene making use of the database schema. The returned [Paginator](src/main/java/org/brutusin/fleadb/pagination) is basically a wrapper around the underlying luecene `IndexSearcher` and `Query` objects that lazily (on demand) performs searches to the index.
 
-Example:
+**Example:**
 ```java 
 // Generic interaction with the previously created database
 FleaDB<JsonNode> gdb = new GenericFleaDB(indexFolder);
@@ -89,7 +89,7 @@ gdb.close();
 
 Basically an *ObjectFleaDB* delegates all its functionality to a wrapped *GenericFleaDB* instance, making use of [JSON SPI](https://github.com/brutusin/commons/blob/master/README.md#json-spi) to perform transformations `POJO<->JsonNode` and `Class<->JsonSchema`. This is the reason why all *flea-db* databases can be used with *GenericFleaDB*.
 
-Example:  
+**Example:**  
 ```java 
 // Create object database
 FleaDB<Record> db = new ObjectFleaDB(indexFolder, Record.class);
