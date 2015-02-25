@@ -25,6 +25,7 @@ Built on top of [Apache Lucene](http://lucene.apache.org/core/).
     - [Queries and sorting](#queries-and-sorting)
     - [Pagination](#pagination)
     - [Faceting](#faceting)
+    - [Optimization](#optimization)
     - [Closing](#closing)
   - [Example tests](#example-tests)
   - [Main stack](#main-stack)
@@ -163,6 +164,7 @@ Map property (additionalProperty in schema)| `$.map` for keys and `$.map[*]` for
 ### Queries and sorting
 ### Pagination
 ### Faceting
+### Optimization
 ### Closing
 
 ##Example tests
