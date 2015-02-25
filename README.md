@@ -111,7 +111,7 @@ Standard JSON schema specification has been extended to declare indexable proper
 See [JSON SPI](https://github.com/brutusin/commons/blob/master/README.md#json-spi) for supported annotations used in the strong-typed scenario.
 
 ###Indexed fields nomenclature
-Databases are self descriptive, they provide information of their schema and indexed fields. Nevertheless, the nomenclature of the fields is defined as follows:
+Databases are self descriptive, they provide information of their schema and indexed fields (via [Schema](src/main/java/org/brutusin/fleadb/Schema.java)). Nevertheless, the nomenclature of the fields is defined as follows:
 
 Case | Field name
 -----| ---------
