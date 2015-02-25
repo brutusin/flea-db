@@ -29,9 +29,9 @@ Built on top of [Apache Lucene](http://lucene.apache.org/core/).
   - [Example tests](#example-tests)
   - [Main stack](#main-stack)
   - [Lucene version](#lucene-version)
-  - [Support, bugs and requests](#)
-  - [Authors](#)
-  - [License](#)
+  - [Support, bugs and requests](#support-bugs-and-requests)
+  - [Authors](#authors)
+  - [License](#license)
 
 ##Motivation
 * Lucene is a powerful low level library, but its API is not very easy to understand.  
