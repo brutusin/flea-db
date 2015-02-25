@@ -53,7 +53,9 @@ Built on top of [Apache Lucene](http://lucene.apache.org/core/).
 ##APIs
 *flea-db* functionality is defined in the interface [FleaDB](src/main/java/org/brutusin/fleadb/FleaDB.java). 
 
-The library provides two implementations for it, a low-level generic implementation [GenericFleaDB](src/main/java/org/brutusin/fleadb/impl/GenericFleaDB.java) and high-level strong-typed implementation [ObjectFleaDB](src/main/java/org/brutusin/fleadb/impl/ObjectFleaDB.java).
+The library provides two implementations for it:
+1. A low-level generic implementation [GenericFleaDB](src/main/java/org/brutusin/fleadb/impl/GenericFleaDB.java).
+2. A high-level strong-typed implementation [ObjectFleaDB](src/main/java/org/brutusin/fleadb/impl/ObjectFleaDB.java) built on top of the previous one.
 
 ###GenericFleaDB
 [GenericFleaDB](src/main/java/org/brutusin/fleadb/impl/GenericFleaDB.java) is the lowest level *FleaDB* implementation that defines the database schema using a JSON schema and stores and indexes records of type `JsonNode`. It directly uses *Apache Lucene* APIs and [JSON SPI](https://github.com/brutusin/commons/blob/master/README.md#json-spi) to maintain two different indexes (one for the terms and other for the taxonomy), hyding the underlying complexity from the user perspective.
