@@ -16,6 +16,59 @@ Built on top of [Apache Lucene](http://lucene.apache.org/core/).
 * [**Faceted search**](http://en.wikipedia.org/wiki/Faceted_search): Powered by [lucene-facet](http://lucene.apache.org/core/4_10_3/facet/index.html).
 * **In memory/persistent versions**
 
+##APIs
+*flea-db* functionality is defined in the interface [FleaDB](src/main/java/org/brutusin/fleadb/FleaDB.java). The library provides two implementations for it, a low-level generic implementation [GenericFleaDB](src/main/java/org/brutusin/fleadb/impl/GenericFleaDB.java) and high-level strong-typed implementation [ObjectFleaDB](src/main/java/org/brutusin/fleadb/impl/ObjectFleaDB.java).
+
+## Generic API
+
+```java 
+// Generic interaction with the previously created database
+FleaDB<JsonNode> gdb = new GenericFleaDB(indexFolder);
+
+// Both for storing ...
+JsonNode json = JsonCodec.getInstance.parse("...");
+gdb.store(json);
+gdb.commit();
+
+// ... and querying:
+Paginator<JsonRecord> paginator = gdb.query(q); // same query instance
+totalPages = paginator.getTotalPages(pageSize);
+for (int i = 1; i <= totalPages; i++) {
+    List<JsonRecord> page = paginator.getPage(i, pageSize);
+    for (int j = 0; j < page.size(); j++) {
+        JsonRecord json = page.get(j);
+        System.out.println(json);
+    }
+}
+gdb.close();
+```
+##Strong-typed API
+This API allows to deal with records as POJOS. The main 
+```java 
+// Create object database
+FleaDB<Record> db = new ObjectFleaDB(indexFolder, Record.class);
+
+// Store records
+for (int i = 0; i < REC_NO; i++) {
+    Record r = new Record();
+    // ... populate record
+    db.store(r);
+}
+db.commit();
+
+// Query records
+Query q = Query.createTermQuery("$.id", "0");
+Paginator<Record> paginator = db.query(q);
+int totalPages = paginator.getTotalPages(pageSize);
+for (int i = 1; i <= totalPages; i++) {
+    List<Record> page = paginator.getPage(i, pageSize);
+    for (int j = 0; j < page.size(); j++) {
+        Record r = page.get(j);
+        System.out.println(r);
+    }
+}
+db.close();
+``` 
 ## Schema
 ###JSON SPI
 This module makes use of the [JSON SPI](https://github.com/brutusin/commons/blob/master/README.md#json-spi), so a JSON service provider like [json-codec-jackson](https://github.com/brutusin/json-codec-jackson) is needed at runtime. The choosen provider will determine JSON serialization, validation, parsing and schema generation.
@@ -50,58 +103,10 @@ Case | Field name
 -----| ---------
 Simple property| `$.id`
 Nested property| `$.header.id`
-Array property| `$.items[#]`
+Array/Collection property| `$.items[#]`
 Map property (additionalProperty in schema)| `$.map` for keys and `$.map[*]` for values
 
-##Examples
-### **Strong-typed API**
-```java 
-// Create object database
-FleaDB<Record> db = new ObjectFleaDB(indexFolder, Record.class);
-
-// Store records
-for (int i = 0; i < REC_NO; i++) {
-    Record r = new Record();
-    // ... populate record
-    db.store(r);
-}
-db.commit();
-
-// Query records
-Query q = Query.createTermQuery("$.id", "0");
-Paginator<Record> paginator = db.query(q);
-int totalPages = paginator.getTotalPages(pageSize);
-for (int i = 1; i <= totalPages; i++) {
-    List<Record> page = paginator.getPage(i, pageSize);
-    for (int j = 0; j < page.size(); j++) {
-        Record r = page.get(j);
-        System.out.println(r);
-    }
-}
-db.close();
-``` 
-### **Generic API**
-```java 
-// Generic interaction with the previously created database
-FleaDB<JsonNode> gdb = new GenericFleaDB(indexFolder);
-
-// Both for storing ...
-JsonNode json = JsonCodec.getInstance.parse("...");
-gdb.store(json);
-gdb.commit();
-
-// ... and querying:
-Paginator<JsonRecord> paginator = gdb.query(q); // same query instance
-totalPages = paginator.getTotalPages(pageSize);
-for (int i = 1; i <= totalPages; i++) {
-    List<JsonRecord> page = paginator.getPage(i, pageSize);
-    for (int j = 0; j < page.size(); j++) {
-        JsonRecord json = page.get(j);
-        System.out.println(json);
-    }
-}
-gdb.close();
-```
+##Example tests
 
 See available [test classes](src/test/java/org/brutusin/fleadb/impl/) for more examples.
 
