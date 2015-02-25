@@ -34,7 +34,7 @@ Built on top of [Apache Lucene](http://lucene.apache.org/core/).
   - [License](#license)
 
 ##Motivation
-* Lucene is a powerful low level library, but its API is not very easy to understand.  
+* Lucene is an extense and powerful low level library, but its API is not very easy to understand.  
 * Putting schemas into play, self-description can be used to simplify API (fields type), and enables the creation of flexible and generic downstream components.
 * Lucene has a lot of experimental APIs that may (and use to) change in time. This library adds a level of indirection. providing a stable high level interface. Upgrades in the underlying Lucene version are absorved by flea-db.
 
