@@ -70,15 +70,15 @@ This is how it works:
 
 **Example:**
 ```java 
-// Generic interaction with the previously created database
+// Generic interaction with a previously created database
 FleaDB<JsonNode> gdb = new GenericFleaDB(indexFolder);
 
-// Both for storing ...
+// Store records
 JsonNode json = JsonCodec.getInstance.parse("...");
 gdb.store(json);
 gdb.commit();
 
-// ... and querying:
+// Query records
 Paginator<JsonRecord> paginator = gdb.query(q); // same query instance
 totalPages = paginator.getTotalPages(pageSize);
 for (int i = 1; i <= totalPages; i++) {
