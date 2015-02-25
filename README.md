@@ -37,9 +37,9 @@ Built on top of [Apache Lucene](http://lucene.apache.org/core/).
 ##Motivation
 * Create a library with a very simple API, self-descriptive with high robustness aimed at indexing objects and providing advanced search capabilities, pagination and faceted search. 
 * Originally born with the purpose of indexing raw data files, and (almost) steady data sets.
-* Lucene is an extense and powerful low level library, but its API is not very easy to understand.
+* *Lucene* is an extense and powerful low level library, but its API is not very easy to understand.
 * Putting schemas into play, self-description can be used to simplify API (fields type), to provide strong validation mechanisms, and to enable the creation of flexible and generic downstream components.
-* Lucene has a lot of experimental APIs that may (and use to) change in time. This library adds a level of indirection. providing a stable high level interface. Upgrades in the underlying Lucene version are absorved by *flea-db*.
+* *Lucene* has a lot of experimental APIs that may (and use to) change in time. This library adds a level of indirection. providing a stable high level interface. Upgrades in the underlying *Lucene* version are absorved by *flea-db*.
 
 ##Main features
 * **Schema-full**: Based on [JSON Schema](http://json-schema.org/).
@@ -64,9 +64,9 @@ The library provides two implementations for it:
 
 This is how it works:
 * **On instantiation**: A `JsonSchema` (from  [JSON SPI](https://github.com/brutusin/commons/blob/master/README.md#json-spi)) and an index folder are passed depending on whether the database is new and/or persistent. Then the JSON schema (passed or readed from the existing database `flea.json` descriptor file) is processed, looking for its [`index`](#json-schema-extension) properties, and finally a database [Schema](src/main/java/org/brutusin/fleadb/Schema.java) is created.
-* **On storing**: The passed `JsonNode` record is validated against the JSON schema. Then a [JsonTransformer](src/main/java/org/brutusin/fleadb/impl/JsonTransformer.java) instance (making use of the processed database schema) transforms the records in terms understandable by Lucene (Document, Fields, FacetField ...) and finally the storage is delegated to the Lucene API.
+* **On storing**: The passed `JsonNode` record is validated against the JSON schema. Then a [JsonTransformer](src/main/java/org/brutusin/fleadb/impl/JsonTransformer.java) instance (making use of the processed database schema) transforms the records in terms understandable by *Lucene* (*Document, Fields, FacetField ... *) and finally the storage is delegated to the *Lucene* API.
 * **On commit**: Underlying index and taxonomy writters are commited and searchers are refreshed to reflect the changes.
-* **On querying**: The [Query](src/main/java/org/brutusin/fleadb/query) and [Sort](src/main/java/org/brutusin/fleadb/sort/Sort.java) objects are transformed into terms understandable by Lucene making use of the database schema. The returned [Paginator](src/main/java/org/brutusin/fleadb/pagination) is basically a wrapper around the underlying luecene `IndexSearcher` and `Query` objects that lazily (on demand) performs searches to the index.
+* **On querying**: The [Query](src/main/java/org/brutusin/fleadb/query) and [Sort](src/main/java/org/brutusin/fleadb/sort/Sort.java) objects are transformed into terms understandable by *Lucene* making use of the database schema. The returned [Paginator](src/main/java/org/brutusin/fleadb/pagination) is basically a wrapper around the underlying luecene `IndexSearcher` and `Query` objects that lazily (on demand) performs searches to the index.
 
 **Example:**
 ```java 
@@ -142,7 +142,7 @@ Standard JSON schema specification has been extended to declare indexable proper
   }
 }
 ```
-* `"index":"index"`: Means that the property is indexed by Lucene under a field with name set according to the rules explained in [nomenclature section](#indexed-fields-nomenclature).
+* `"index":"index"`: Means that the property is indexed by *Lucene* under a field with name set according to the rules explained in [nomenclature section](#indexed-fields-nomenclature).
 * `"index":"facet"`: Means that the property is indexed as in the previous case, but also a facet is created with this field name.
 
 ###Annotations
