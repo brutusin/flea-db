@@ -6,7 +6,7 @@ A java library for creating standalone, portable, schema-full object databases s
 
 Built on top of [Apache Lucene](http://lucene.apache.org/core/).
 
-**Main features**
+**Main features:**
 * Schema-full/self-descriptive
 * Simple and powerful API. Strong-typed and generic flavors
 * High robustness. Record, field names and type validation.
@@ -14,7 +14,7 @@ Built on top of [Apache Lucene](http://lucene.apache.org/core/).
 * Faceted search
 * In memory and persistent versions
 
-**Table of Contents** 
+**Table of Contents:** 
 
 - [org.brutusin:flea-db](#)
   - [Motivation](#motivation)
