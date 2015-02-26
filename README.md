@@ -228,7 +228,7 @@ Databases must be closed after its usage, via `close()` method in order to free 
 Both implementations are thread safe and can be shared across multiple threads.
 
 ##Index structure
-
+Persistent *flea-db* databases create the following index structure: 
 ```
 /flea-db/
 |-- flea.json
@@ -237,6 +237,8 @@ Both implementations are thread safe and can be shared across multiple threads.
 |-- taxonomy-index
 |   |-- ...
 ```
+being `flea.json` the database descriptor containing its schema, and being `record-index` and `taxonomy-index` subfolders the underlying *Lucene* indexes structures.
+
 ##ACID properties
 `flea-db` offers the following [ACID](http://en.wikipedia.org/wiki/ACID) properties, inherited from *Lucene* ones:
 
