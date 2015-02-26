@@ -187,12 +187,14 @@ db1.store(jsonNode);
 // or
 db2.store(record);
 ```
-internally this ends up calling `addDocument` in the underlying Lucene `IndexWriter`.
+internally this ends up calling `addDocument` in the underlying *Lucene* `IndexWriter`.
 #### Delete
 The API enables to delete a set of records using `delete(Query q)`.
 #### Commit
 Previous operations (store and delete) are not (and won't ever be) visible until `commit()` is called.
 #### Optimization
+Databases can be optimized in order to achieve a better performance by using `optimize()`. This triggers the highly costly process (in terms of free disk space and computation) of merging of the *Luecene* index segments into a single one. 
+Nevertheless this operation is useful for immutable databases, that can be once optimized prior its usage.
 ### Read operations
 #### Queries and sorting
 #### Pagination
