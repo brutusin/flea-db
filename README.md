@@ -167,6 +167,7 @@ Databases can be created in RAM memory or in disk, depending on the addressed pr
 In order to create an persistent database, a constructor(s) with a `File` argument has to be choosen:
 ```java
 Flea db1 = new GenericFleaDB(indexFolder, jsonSchema);
+// or
 Flea db2 = new ObjectFleaDB(indexFolder, Record.class);
 ```
 otherwise, the database will be kept in RAM memory and lost at the end of the JVM execution.
@@ -176,7 +177,15 @@ Flea db2 = new ObjectFleaDB(Record.class);
 ```
 
 ### Write operations
+The following operations perform modifications on the database.
 #### Store
+In order to store a registry the `store(...)` method has to be used:
+```java 
+db1.store(jsonNode);
+// or
+db2.store(record);
+```
+
 #### Delete
 #### Commit
 #### Optimization
