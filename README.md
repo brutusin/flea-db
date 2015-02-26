@@ -37,7 +37,7 @@ Built on top of [Apache Lucene](http://lucene.apache.org/core/).
     - [Closing](#closing)
   - [Index structure](#index-structure)
   - [ACID properties](#acid-properties)
-  - [Example tests](#example-tests)
+  - [Examples](#examples)
   - [Main stack](#main-stack)
   - [Lucene version](#lucene-version)
   - [Support, bugs and requests](#support-bugs-and-requests)
