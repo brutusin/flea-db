@@ -37,6 +37,7 @@ Built on top of [Apache Lucene](http://lucene.apache.org/core/).
       - [Record queries](#record-queries)
       - [Facet queries](#facet-queries)
     - [Closing](#closing)
+  - [Index structure](index-structure)
   - [ACID properties](#acid-properties)
   - [Example tests](#example-tests)
   - [Main stack](#main-stack)
@@ -192,6 +193,7 @@ internally this ends up calling `addDocument` in the underlying *Lucene* `IndexW
 #### Delete
 The API enables to delete a set of records using `delete(Query q)`.
 >NOTE: Due to Lucene facet internals, categories are never deleted from the taxonomy index, despite of being orphan.
+
 #### Commit
 Previous operations (store and delete) are not (and won't ever be) visible until `commit()` is called. Underlying seachers and writers are released, to be lazily created in further read or write operations.
 #### Optimization
@@ -221,8 +223,12 @@ Faceting is provided by [lucene-facet](http://lucene.apache.org/core/4_10_3/face
 
 ### Closing
 Databases must be closed after its usage, via `close()` method in order to free the resources and locks hold. Closing a database makes it no longer usable.
+
 ##Threading issues
 Both implementations are thread safe and can be shared across multiple threads.
+
+##Index structure
+
 ##ACID properties
 `flea-db` offers the following [ACID](http://en.wikipedia.org/wiki/ACID) properties, inherited from *Lucene* ones:
 
