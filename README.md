@@ -16,6 +16,7 @@ Built on top of [Apache Lucene](http://lucene.apache.org/core/).
 
 - [org.brutusin:flea-db](#)
   - [Motivation](#motivation)
+  - [Maven dependency](#maven-dependency)
   - [APIs](#apis)
     - [GenericFleaDB](#genericfleadb)
     - [ObjectFleaDB](#objectfleadb)
@@ -50,6 +51,17 @@ Built on top of [Apache Lucene](http://lucene.apache.org/core/).
 * *Lucene* is an extense and powerful low level library, but its API is not very easy to understand.
 * Putting schemas into play, self-description can be used to simplify API (fields type), to provide strong validation mechanisms, and to enable the creation of flexible and generic downstream components.
 * *Lucene* has a lot of experimental APIs that may (and use to) change in time. This library adds a level of indirection. providing a stable high level interface. Upgrades in the underlying *Lucene* version are absorved by *flea-db*.
+
+##Maven dependency 
+```xml
+<dependency>
+    <groupId>org.brutusin</groupId>
+    <artifactId>flea-db</artifactId>
+</dependency>
+```
+Click [here](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22org.brutusin%22%20a%3A%22flea-db%22) to see the latest available version released to the Maven Central Repository.
+
+If you are not using maven and need help you can ask [here](https://github.com/brutusin/flea-db/issues).
 
 ##APIs
 All *flea-db* functionality is defined by [FleaDB](src/main/java/org/brutusin/fleadb/FleaDB.java) interface. 
