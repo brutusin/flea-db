@@ -181,7 +181,7 @@ Flea db2 = new ObjectFleaDB(Record.class);
 ### Write operations
 The following operations perform modifications on the database.
 #### Store
-In order to store a registry the `store(...)` method has to be used:
+In order to store a record the `store(...)` method has to be used:
 ```java 
 db1.store(jsonNode);
 // or
@@ -189,7 +189,7 @@ db2.store(record);
 ```
 internally this ends up calling `addDocument` in the underlying Lucene `IndexWriter`.
 #### Delete
-The API enables to delete a set of registries using `delete(Query q)`.
+The API enables to delete a set of records using `delete(Query q)`.
 #### Commit
 Previous operations (store and delete) are not (and won't ever be) visible until `commit()` is called.
 #### Optimization
