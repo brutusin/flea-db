@@ -175,13 +175,18 @@ Flea db1 = new GenericFleaDB(jsonSchema);
 Flea db2 = new ObjectFleaDB(Record.class);
 ```
 
-### Store and commit
-### Queries and sorting
-### Pagination
+### Write operations
+#### Store
+#### Delete
+#### Commit
+#### Optimization
+### Read operations
+#### Queries and sorting
+#### Pagination
 [Pagination](http://en.wikipedia.org/wiki/Pagination#Pagination_in_web_content)
-### Faceting
+#### Faceting
 [Faceted search](http://en.wikipedia.org/wiki/Faceted_search). Powered by [lucene-facet](http://lucene.apache.org/core/4_10_3/facet/index.html).
-### Optimization
+
 ### Closing
 
 ##Example tests
