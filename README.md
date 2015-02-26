@@ -34,9 +34,8 @@ Built on top of [Apache Lucene](http://lucene.apache.org/core/).
       - [Commit](#commit)
       - [Optimization](#optimization)
     - [Read operations](#read-operations)
-      - [Queries and sorting](#queries-and-sorting)
-      - [Pagination](#pagination)
-      - [Faceting](#faceting)
+      - [Record queries](#record-queries)
+      - [Facet queries](#facet-queries)
     - [Closing](#closing)
   - [ACID properties](#acid-properties)
   - [Example tests](#example-tests)
@@ -201,7 +200,7 @@ Nevertheless, this operation is useful for immutable databases, that can be once
 ### Read operations
 Two kind of read operations can be performed, both supporting a [Query](src/main/java/org/brutusin/fleadb/query) argument, that defines the search criteria.
 
-#### Record queries.
+#### Record queries
 Record queries can be [paginated](http://en.wikipedia.org/wiki/Pagination#Pagination_in_web_content) and the ordering of the results can be specified via a [Sort](src/main/java/org/brutusin/fleadb/sort/Sort.java) argument.
 
 * `public E getSingleResult(final Query q)`
