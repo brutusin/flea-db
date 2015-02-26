@@ -37,7 +37,7 @@ Built on top of [Apache Lucene](http://lucene.apache.org/core/).
       - [Record queries](#record-queries)
       - [Facet queries](#facet-queries)
     - [Closing](#closing)
-  - [Index structure](index-structure)
+  - [Index structure](#index-structure)
   - [ACID properties](#acid-properties)
   - [Example tests](#example-tests)
   - [Main stack](#main-stack)
