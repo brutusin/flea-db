@@ -208,13 +208,15 @@ Record queries can be [paginated](http://en.wikipedia.org/wiki/Pagination#Pagina
 * `public Paginator<E> query(final Query q, final Sort sort)`
 
 #### Facet queries
-Powered by [lucene-facet](http://lucene.apache.org/core/4_10_3/facet/index.html).
+[FacetResponse](src/main/java/org/brutusin/fleadb/facet/FacetResponse.java) represents the faceting info returned by the database.
 
 * `public List<FacetResponse> getFacetValues(final Query q, FacetMultiplicities activeFacets)`
 * `public List<FacetResponse> getFacetValues(final Query q, int maxFacetValues)`
 * `public List<FacetResponse> getFacetValuesStartingWith(String facetName, String prefix, Query q, int max)`
 * `public int getNumFacetValues(Query q, String facetName)`
 * `public double getFacetValueMultiplicity(String facetName, String facetValue, Query q)`
+
+Faceting is provided by [lucene-facet](http://lucene.apache.org/core/4_10_3/facet/index.html).
 
 ### Closing
 ##Threading issues
