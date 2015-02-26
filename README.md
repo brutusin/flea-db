@@ -1,7 +1,5 @@
 #org.brutusin:flea-db 
 
--*Documentation under development. Not released to maven-central yet*-
-
 A java library for creating standalone, portable, schema-full object databases supporting [pagination](http://en.wikipedia.org/wiki/Pagination#Pagination_in_web_content) and [faceted search](http://en.wikipedia.org/wiki/Faceted_search), and offering strong-typed and generic APIs.
 
 Built on top of [Apache Lucene](http://lucene.apache.org/core/).
