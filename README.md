@@ -219,6 +219,7 @@ Record queries can be [paginated](http://en.wikipedia.org/wiki/Pagination#Pagina
 Faceting is provided by [lucene-facet](http://lucene.apache.org/core/4_10_3/facet/index.html).
 
 ### Closing
+Databases must be closed after its usage, via `close()` method in order to free the resources and locks hold. Closing a database makes it no longer usable.
 ##Threading issues
 Both implementations are thread safe and can be shared across multiple threads.
 ##ACID properties
