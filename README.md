@@ -2,7 +2,7 @@
 
 -*Documentation under development. Not released to maven-central yet*-
 
-A java library for creating standalone, portable, schema-full object databases supporting pagination and faceted search, and offering strong-typed and generic APIs.
+A java library for creating standalone, portable, schema-full object databases supporting [pagination](http://en.wikipedia.org/wiki/Pagination#Pagination_in_web_content) and [faceted search](http://en.wikipedia.org/wiki/Faceted_search), and offering strong-typed and generic APIs.
 
 Built on top of [Apache Lucene](http://lucene.apache.org/core/).
 
@@ -10,8 +10,8 @@ Built on top of [Apache Lucene](http://lucene.apache.org/core/).
 * Schema-full/self-descriptive
 * Simple and powerful API. Strong-typed and generic flavors
 * High robustness. Record, field names and type validation.
-* [Pagination](http://en.wikipedia.org/wiki/Pagination#Pagination_in_web_content)
-* [Faceted search](http://en.wikipedia.org/wiki/Faceted_search)
+* Pagination
+* Faceted search
 * In memory and persistent versions
 
 **Table of Contents** 
@@ -62,7 +62,7 @@ The library provides two implementations for it:
 2. A high-level strong-typed implementation [ObjectFleaDB](src/main/java/org/brutusin/fleadb/impl/ObjectFleaDB.java) built on top of the previous one.
 
 ###GenericFleaDB
-[GenericFleaDB](src/main/java/org/brutusin/fleadb/impl/GenericFleaDB.java) is the lowest level *flea-db* implementation that defines the database schema using a JSON schema and stores and indexes records of type `JsonNode`. It directly uses *Apache Lucene* APIs and [JSON SPI](https://github.com/brutusin/commons/blob/master/README.md#json-spi) to maintain two different indexes (one for the terms and other for the taxonomy), hyding the underlying complexity from the user perspective.
+[GenericFleaDB](src/main/java/org/brutusin/fleadb/impl/GenericFleaDB.java) is the lowest level *flea-db* implementation that defines the database schema using a JSON schema and stores and indexes records of type `JsonNode`. It directly uses *Apache Lucene* APIs and [JSON SPI](https://github.com/brutusin/commons/blob/master/README.md#json-spi) to maintain two different indexes (one for the terms and other for the taxonomy, see [index structure](#index-structure)), hyding the underlying complexity from the user perspective.
 
 This is how it works:
 * **On instantiation**: A `JsonSchema` (from  [JSON SPI](https://github.com/brutusin/commons/blob/master/README.md#json-spi)) and an index folder are passed depending on whether the database is new and/or persistent. Then the JSON schema (passed or readed from the existing database `flea.json` descriptor file) is processed, looking for its [`index`](#json-schema-extension) properties, and finally a database [Schema](src/main/java/org/brutusin/fleadb/Schema.java) is created.
