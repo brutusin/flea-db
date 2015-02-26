@@ -193,17 +193,29 @@ internally this ends up calling `addDocument` in the underlying *Lucene* `IndexW
 #### Delete
 The API enables to delete a set of records using `delete(Query q)`.
 #### Commit
-Previous operations (store and delete) are not (and won't ever be) visible until `commit()` is called.
+Previous operations (store and delete) are not (and won't ever be) visible until `commit()` is called. Underlying seachers and writers are released, to be lazily created in further read or write operations.
 #### Optimization
 Databases can be optimized in order to achieve a better performance by using `optimize()`. This triggers the highly costly process (in terms of free disk space needs and computation) of merging of the *Lucene* index segments into a single one. 
 
 Nevertheless, this operation is useful for immutable databases, that can be once optimized prior its usage.
 ### Read operations
-#### Queries and sorting
-#### Pagination
-[Pagination](http://en.wikipedia.org/wiki/Pagination#Pagination_in_web_content)
-#### Faceting
+Two kind of read operations can be performed, both supporting a [Query](src/main/java/org/brutusin/fleadb/query) argument, that defines the search criteria.
+
+#### Record queries.
+Record queries can be [paginated](http://en.wikipedia.org/wiki/Pagination#Pagination_in_web_content) and the ordering of the results can be specified via a [Sort](src/main/java/org/brutusin/fleadb/sort/Sort.java) argument.
+
+* `public E getSingleResult(final Query q)`
+* `public Paginator<E> query(final Query q)`
+* `public Paginator<E> query(final Query q, final Sort sort)`
+
+#### Facet queries
 [Faceted search](http://en.wikipedia.org/wiki/Faceted_search). Powered by [lucene-facet](http://lucene.apache.org/core/4_10_3/facet/index.html).
+
+* `public List<FacetResponse> getFacetValues(final Query q, FacetMultiplicities activeFacets)`
+* `public List<FacetResponse> getFacetValues(final Query q, int maxFacetValues)`
+* `public List<FacetResponse> getFacetValuesStartingWith(String facetName, String prefix, Query q, int max)`
+* `public int getNumFacetValues(Query q, String facetName)`
+* `public double getFacetValueMultiplicity(String facetName, String facetValue, Query q)`
 
 ### Closing
 ##Threading issues
