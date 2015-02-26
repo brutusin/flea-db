@@ -237,7 +237,7 @@ Persistent *flea-db* databases create the following index structure:
 |-- taxonomy-index
 |   |-- ...
 ```
-being `flea.json` the database descriptor containing its schema, and being `record-index` and `taxonomy-index` subfolders the underlying *Lucene* indexes structures.
+being `flea.json` the database descriptor containing its schema, and being `record-index` and `taxonomy-index` subfolders the underlying *Lucene* index structures.
 
 ##ACID properties
 `flea-db` offers the following [ACID](http://en.wikipedia.org/wiki/ACID) properties, inherited from *Lucene* ones:
