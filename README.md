@@ -10,8 +10,8 @@ Built on top of [Apache Lucene](http://lucene.apache.org/core/).
 * Schema-full/self-descriptive
 * Simple and powerful API. Strong-typed and generic flavors
 * High robustness. Record, field names and type validation.
-* Pagination
-* Faceted search
+* [Pagination](http://en.wikipedia.org/wiki/Pagination#Pagination_in_web_content)
+* [Faceted search](http://en.wikipedia.org/wiki/Faceted_search)
 * In memory and persistent versions
 
 **Table of Contents** 
@@ -208,7 +208,7 @@ Record queries can be [paginated](http://en.wikipedia.org/wiki/Pagination#Pagina
 * `public Paginator<E> query(final Query q, final Sort sort)`
 
 #### Facet queries
-[Faceted search](http://en.wikipedia.org/wiki/Faceted_search). Powered by [lucene-facet](http://lucene.apache.org/core/4_10_3/facet/index.html).
+Powered by [lucene-facet](http://lucene.apache.org/core/4_10_3/facet/index.html).
 
 * `public List<FacetResponse> getFacetValues(final Query q, FacetMultiplicities activeFacets)`
 * `public List<FacetResponse> getFacetValues(final Query q, int maxFacetValues)`
