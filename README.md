@@ -229,6 +229,14 @@ Both implementations are thread safe and can be shared across multiple threads.
 
 ##Index structure
 
+```
+/flea-db/
+|-- flea.json
+|-- record-index
+|   |-- ...
+|-- taxonomy-index
+|   |-- ...
+```
 ##ACID properties
 `flea-db` offers the following [ACID](http://en.wikipedia.org/wiki/ACID) properties, inherited from *Lucene* ones:
 
