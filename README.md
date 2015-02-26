@@ -171,9 +171,9 @@ Flea db1 = new GenericFleaDB(indexFolder, jsonSchema);
 // or
 Flea db2 = new ObjectFleaDB(indexFolder, Record.class);
 ```
-NOTE: Multiple instances can be used to read the same persistent database (for example different concurrent JVM executions), but only one can hold the writting lock (claimed the first time a write method is called).
+>NOTE: Multiple instances can be used to read the same persistent database (for example different concurrent JVM executions), but only one can hold the writting lock (claimed the first time a write method is called).
 
-otherwise, the database will be kept in RAM memory and lost at the end of the JVM execution.
+On the other side, the database will be kept in RAM memory and lost at the end of the JVM execution.
 ```java
 Flea db1 = new GenericFleaDB(jsonSchema);
 // or
