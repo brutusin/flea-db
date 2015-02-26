@@ -38,6 +38,7 @@ Built on top of [Apache Lucene](http://lucene.apache.org/core/).
       - [Pagination](#pagination)
       - [Faceting](#faceting)
     - [Closing](#closing)
+  - [ACID properties](#acid-properties)
   - [Example tests](#example-tests)
   - [Main stack](#main-stack)
   - [Lucene version](#lucene-version)
@@ -173,6 +174,7 @@ Flea db2 = new ObjectFleaDB(indexFolder, Record.class);
 otherwise, the database will be kept in RAM memory and lost at the end of the JVM execution.
 ```java
 Flea db1 = new GenericFleaDB(jsonSchema);
+// or
 Flea db2 = new ObjectFleaDB(Record.class);
 ```
 
@@ -185,9 +187,11 @@ db1.store(jsonNode);
 // or
 db2.store(record);
 ```
-
+internally this ends up calling `addDocument` in the underlying Lucene `IndexWriter`.
 #### Delete
+The API enables to delete a set of registries using `delete(Query q)`.
 #### Commit
+Previous operations (store and delete) are not (and won't ever be) visible until `commit()` is called.
 #### Optimization
 ### Read operations
 #### Queries and sorting
@@ -197,7 +201,7 @@ db2.store(record);
 [Faceted search](http://en.wikipedia.org/wiki/Faceted_search). Powered by [lucene-facet](http://lucene.apache.org/core/4_10_3/facet/index.html).
 
 ### Closing
-
+##ACID properties
 ##Example tests
 See available [test classes](src/test/java/org/brutusin/fleadb/impl/) for more examples.
 
