@@ -158,6 +158,19 @@ Map property (additionalProperty in schema)| `$.map` for keys and `$.map[*]` for
 
 ##Usage
 ### Database persistence
+Databases can be created in RAM memory or in disk, depending on the addressed problem characteristics (performance, dataset size, indexation time,  etc...).
+In order to create an persistent database, a the constructor(s) with a `File` argument has to be choosen:
+
+```java
+Flea db1 = new GenericFleaDB(indexFolder, jsonSchema);
+Flea db2 = new ObjectFleaDB(indexFolder, Record.class);
+```
+otherwise, the database will be kept in RAM memory and lost at the end of the JVM execution.
+```java
+Flea db1 = new GenericFleaDB(jsonSchema);
+Flea db2 = new ObjectFleaDB(Record.class);
+```
+
 ### Store and commit
 ### Queries and sorting
 ### Pagination
