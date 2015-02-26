@@ -24,7 +24,7 @@ import org.brutusin.fleadb.Schema;
  *
  * @author Ignacio del Valle Alles idelvall@brutusin.org
  */
-public class BooleanQuery extends Query {
+public final class BooleanQuery extends Query {
 
     private final LinkedHashMap<Query, BooleanClause.Occur> clauses = new LinkedHashMap();
 

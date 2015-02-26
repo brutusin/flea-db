@@ -34,6 +34,9 @@ import org.brutusin.fleadb.Schema;
  */
 public abstract class Query {
 
+    Query() {
+    }
+
     public static final Query MATCH_ALL_DOCS_QUERY = new Query() {
         private final org.apache.lucene.search.Query luceneQuery = new MatchAllDocsQuery();
 
