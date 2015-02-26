@@ -6,11 +6,18 @@ A java library for creating standalone, portable, schema-full object databases s
 
 Built on top of [Apache Lucene](http://lucene.apache.org/core/).
 
+**Main features**
+* Schema-full/self-descriptive
+* Simple and powerful API. Strong-typed and generic flavors
+* High robustness. Record, field names and type validation.
+* Pagination
+* Faceted search
+* In memory and persistent versions
+
 **Table of Contents** 
 
 - [org.brutusin:flea-db](#)
   - [Motivation](#motivation)
-  - [Main features](#main-features)
   - [APIs](#apis)
     - [GenericFleaDB](#genericfleadb)
     - [ObjectFleaDB](#objectfleadb)
@@ -40,16 +47,6 @@ Built on top of [Apache Lucene](http://lucene.apache.org/core/).
 * *Lucene* is an extense and powerful low level library, but its API is not very easy to understand.
 * Putting schemas into play, self-description can be used to simplify API (fields type), to provide strong validation mechanisms, and to enable the creation of flexible and generic downstream components.
 * *Lucene* has a lot of experimental APIs that may (and use to) change in time. This library adds a level of indirection. providing a stable high level interface. Upgrades in the underlying *Lucene* version are absorved by *flea-db*.
-
-##Main features
-* **Schema-full**: Based on [JSON Schema](http://json-schema.org/).
-* **Strong-typed API**: Using `<E>` for records and generating database schema from `Class<E>`.
-* **Generic API**: Using JSON for records and JSON Schema for database schema.
-* **Record validation**
-* **Field name and type validation**: For queries and sorting.
-* [**Pagination**](http://en.wikipedia.org/wiki/Pagination#Pagination_in_web_content)
-* [**Faceted search**](http://en.wikipedia.org/wiki/Faceted_search): Powered by [lucene-facet](http://lucene.apache.org/core/4_10_3/facet/index.html).
-* **In memory/persistent versions**
 
 ##APIs
 All *flea-db* functionality is defined by [FleaDB](src/main/java/org/brutusin/fleadb/FleaDB.java) interface. 
@@ -164,7 +161,9 @@ Map property (additionalProperty in schema)| `$.map` for keys and `$.map[*]` for
 ### Store and commit
 ### Queries and sorting
 ### Pagination
+[Pagination](http://en.wikipedia.org/wiki/Pagination#Pagination_in_web_content)
 ### Faceting
+[Faceted search](http://en.wikipedia.org/wiki/Faceted_search). Powered by [lucene-facet](http://lucene.apache.org/core/4_10_3/facet/index.html).
 ### Optimization
 ### Closing
 
