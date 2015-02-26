@@ -145,10 +145,12 @@ The API enables to delete a set of records using `delete(Query q)`.
 
 #### Commit
 Previous operations (store and delete) are not (and won't ever be) visible until `commit()` is called. Underlying seachers and writers are released, to be lazily created in further read or write operations.
+
 #### Optimization
 Databases can be optimized in order to achieve a better performance by using `optimize()`. This method triggers a highly costly (in terms of free disk space needs and computation) merging of the *Lucene* index segments into a single one. 
 
 Nevertheless, this operation is useful for immutable databases, that can be once optimized prior its usage.
+
 ### Read operations
 Two kind of read operations can be performed, both supporting a [Query](src/main/java/org/brutusin/fleadb/query) argument, that defines the search criteria.
 
