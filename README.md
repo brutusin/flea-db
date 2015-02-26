@@ -1,4 +1,4 @@
-#org.brutusin:flea-db [![Build Status](https://api.travis-ci.org/brutusin/flea-db.svg?branch=master)](https://travis-ci.org/brutusin/flea-db) [![Maven Central Latest Version](https://maven-badges.herokuapp.com/maven-central/org.brutusin/flea-db/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.brutusin/flea-db/)
+#org.brutusin:flea-db [![Build Status](https://api.travis-ci.org/brutusin/flea-db.svg?branch=master)](https://travis-ci.org/brutusin/flea-db) [![Maven Central Latest Version](https://maven-badges.herokuapp.com/maven-central/org.brutusin/flea-db/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.brutusin/flea-db/) 
 
 A java library for creating standalone, portable, schema-full object databases supporting [pagination](http://en.wikipedia.org/wiki/Pagination#Pagination_in_web_content) and [faceted search](http://en.wikipedia.org/wiki/Faceted_search), and offering strong-typed and generic APIs.
 
