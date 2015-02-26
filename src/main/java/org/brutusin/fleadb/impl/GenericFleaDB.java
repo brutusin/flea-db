@@ -65,6 +65,9 @@ import org.brutusin.fleadb.sort.Sort;
 public final class GenericFleaDB implements FleaDB<JsonNode> {
 
     public static final Version LUCENE_VERSION = Version.LUCENE_4_10_3;
+    private static final String DESCRIPTOR_FILE_NAME = "flea.json";
+    private static final String RECORD_INDEX_SUBFOLDER_NAME = "record-index";
+    private static final String TAXONOMY_INDEX_SUBFOLDER_NAME = "taxonomy-index";
 
     private final FleaDBInfo dsInfo;
     private final JsonTransformer transformer;
@@ -133,7 +136,7 @@ public final class GenericFleaDB implements FleaDB<JsonNode> {
 
                 // Disk datasource
             } else {
-                this.infoFile = new File(indexFolder, "flea.json");
+                this.infoFile = new File(indexFolder, DESCRIPTOR_FILE_NAME);
                 if (indexFolder.exists()) {
                     this.dsInfo = readFleaDBInfo();
                     if (this.dsInfo == null) {
@@ -150,8 +153,8 @@ public final class GenericFleaDB implements FleaDB<JsonNode> {
                     this.dsInfo.setSchema(schema);
                     writeFleaDBInfo();
                 }
-                this.indexDir = FSDirectory.open(indexFolder);
-                this.facetDir = FSDirectory.open(new File(indexFolder, "facets"));
+                this.indexDir = FSDirectory.open(new File(indexFolder, RECORD_INDEX_SUBFOLDER_NAME));
+                this.facetDir = FSDirectory.open(new File(indexFolder, TAXONOMY_INDEX_SUBFOLDER_NAME));
             }
             this.transformer = new JsonTransformer(this.dsInfo.getSchema());
             this.facetsConfig = new FacetsConfig();

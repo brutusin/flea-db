@@ -27,7 +27,7 @@ import static org.junit.Assert.*;
  *
  * @author Ignacio del Valle Alles idelvall@brutusin.org
  */
-public class QueryDBTest extends InMemoryFleaDBTest {
+public class QueryDBTest extends FleaDBTest {
 
     @Test
     public void testStoreAndRetrieve() {

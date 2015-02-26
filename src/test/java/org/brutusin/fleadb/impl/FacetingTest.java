@@ -27,7 +27,7 @@ import static org.junit.Assert.*;
  *
  * @author Ignacio del Valle Alles idelvall@brutusin.org
  */
-public class FacetingTest extends InMemoryFleaDBTest {
+public class FacetingTest extends FleaDBTest {
 
     private final int MAX_FACET_VALUES = 5;
 

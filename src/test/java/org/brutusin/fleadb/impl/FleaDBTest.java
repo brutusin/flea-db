@@ -15,10 +15,10 @@
  */
 package org.brutusin.fleadb.impl;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import org.brutusin.fleadb.impl.ObjectFleaDB;
 import org.brutusin.fleadb.record.Component;
 import org.brutusin.fleadb.record.Record;
 import org.junit.After;
@@ -28,7 +28,7 @@ import org.junit.Before;
  *
  * @author Ignacio del Valle Alles idelvall@brutusin.org
  */
-public class InMemoryFleaDBTest {
+public class FleaDBTest {
 
     protected ObjectFleaDB<Record> db;
     
@@ -39,7 +39,7 @@ public class InMemoryFleaDBTest {
     @Before
     public void setUp() {
         try {
-            db = new ObjectFleaDB(Record.class);
+            db = new ObjectFleaDB(getIndexFolder() , Record.class);
             for (int i = 0; i < getMaxRecords(); i++) {
                 Record r = new Record();
                 r.setId(String.valueOf(i));
@@ -57,6 +57,10 @@ public class InMemoryFleaDBTest {
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
+    }
+    
+    protected File getIndexFolder(){
+        return null;
     }
 
     @After
