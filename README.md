@@ -191,6 +191,7 @@ db2.store(record);
 internally this ends up calling `addDocument` in the underlying *Lucene* `IndexWriter`.
 #### Delete
 The API enables to delete a set of records using `delete(Query q)`.
+>NOTE: Due to Lucene facet internals, categories are never deleted from the taxonomy index, despite of have been orphaned.
 #### Commit
 Previous operations (store and delete) are not (and won't ever be) visible until `commit()` is called. Underlying seachers and writers are released, to be lazily created in further read or write operations.
 #### Optimization
@@ -223,6 +224,8 @@ Databases must be closed after its usage, via `close()` method in order to free 
 ##Threading issues
 Both implementations are thread safe and can be shared across multiple threads.
 ##ACID properties
+`flea-db` offers the following [ACID](http://en.wikipedia.org/wiki/ACID) properties, inherited from *Lucene* ones:
+
 ##Example tests
 See available [test classes](src/test/java/org/brutusin/fleadb/impl/) for more examples.
 
