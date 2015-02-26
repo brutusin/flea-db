@@ -242,10 +242,10 @@ being `flea.json` the database descriptor containing its schema, and being `reco
 ##ACID properties
 `flea-db` offers the following [ACID](http://en.wikipedia.org/wiki/ACID) properties, inherited from *Lucene* ones:
 
-* **Atomicity:** When make changes are performed, and then commit, either all (if the commit succeeds) or none (if the commit fails) of your changes will be visible.
-* **Consistency:** if the computer or OS crashes, or the JVM crashes or is killed, or power is lost, indexes will remain intact (ie, not corrupt). Note that other problems, such as bad RAM, a bit-flipping CPU or file system corruption, can still easily corrupt the index! 
+* **Atomicity:** When changes are performed, and then committed, either all (if the commit succeeds) or none (if the commit fails) of them will be visible.
+* **Consistency:** if the computer or OS crashes, or the JVM crashes or is killed, or power is lost, indexes will remain intact (ie, not corrupt).
 * **Isolation:** Changes performed are not visible until committed. 
-* **Durability:** in case of a persistent database and after commit returns, all changes have been written to durable storage. If the computer or OS crashes, or the JVM crashes or is killed, or power is lost to the computer, all changes will still be present in the index, despite of not the database not being properly closed.
+* **Durability:** In case of a persistent database, when the commit returns, all changes have been written to disk. If the JVM crashes, all changes will still be present in the index, despite of not the database not being properly closed.
 
 ##Example tests
 See available [test classes](src/test/java/org/brutusin/fleadb/impl/) for more examples.
