@@ -171,6 +171,8 @@ Flea db1 = new GenericFleaDB(indexFolder, jsonSchema);
 // or
 Flea db2 = new ObjectFleaDB(indexFolder, Record.class);
 ```
+NOTE: Multiple instances can be used to read the same persistent database (for example different concurrent JVM executions), but only one can hold the writting lock (claimed the first time a write method is called).
+
 otherwise, the database will be kept in RAM memory and lost at the end of the JVM execution.
 ```java
 Flea db1 = new GenericFleaDB(jsonSchema);
@@ -204,6 +206,8 @@ Nevertheless, this operation is useful for immutable databases, that can be once
 [Faceted search](http://en.wikipedia.org/wiki/Faceted_search). Powered by [lucene-facet](http://lucene.apache.org/core/4_10_3/facet/index.html).
 
 ### Closing
+##Threading issues
+Both implementations are thread safe and can be shared across multiple threads.
 ##ACID properties
 ##Example tests
 See available [test classes](src/test/java/org/brutusin/fleadb/impl/) for more examples.
