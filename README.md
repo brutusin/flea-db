@@ -191,7 +191,7 @@ db2.store(record);
 internally this ends up calling `addDocument` in the underlying *Lucene* `IndexWriter`.
 #### Delete
 The API enables to delete a set of records using `delete(Query q)`.
->NOTE: Due to Lucene facet internals, categories are never deleted from the taxonomy index, despite of have been orphaned.
+>NOTE: Due to Lucene facet internals, categories are never deleted from the taxonomy index, despite of being orphan.
 #### Commit
 Previous operations (store and delete) are not (and won't ever be) visible until `commit()` is called. Underlying seachers and writers are released, to be lazily created in further read or write operations.
 #### Optimization
