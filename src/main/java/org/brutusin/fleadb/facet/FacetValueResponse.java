@@ -19,62 +19,9 @@ package org.brutusin.fleadb.facet;
  *
  * @author Ignacio del Valle Alles idelvall@brutusin.org
  */
-public class FacetValueResponse {
+public interface FacetValueResponse {
 
-    public static final Comparator COMPARATOR = new Comparator();
-    
-    protected double multiplicity;
-    protected String value;
+    public String getValue();
 
-    public FacetValueResponse() {
-    }
-
-    public FacetValueResponse(String value, double multiplicity) {
-        this.multiplicity = multiplicity;
-        this.value = value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
-
-    public String getValue() {
-        return value;
-    }
-
-    public double getMultiplicity() {
-        return multiplicity;
-    }
-
-    public void setMultiplicity(double multiplicity) {
-        this.multiplicity = multiplicity;
-    }
-
-    @Override
-    public String toString() {
-        return this.value + "(" + this.multiplicity + ")";
-    }
-
-    @Override
-    public int hashCode() {
-        return this.value.hashCode();
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj == null || !(obj instanceof FacetValueResponse)) {
-            return false;
-        }
-        return this.value.equals(((FacetValueResponse)obj).value);
-    }
-    
-    static class Comparator implements java.util.Comparator<FacetValueResponse>{
-        
-        private Comparator(){
-        
-        }
-        public int compare(FacetValueResponse o1, FacetValueResponse o2) {
-            return -Double.compare(o1.multiplicity, o2.multiplicity);
-        }
-    }
+    public double getMultiplicity();
 }

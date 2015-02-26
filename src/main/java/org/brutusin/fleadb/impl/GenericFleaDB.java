@@ -318,17 +318,17 @@ public final class GenericFleaDB implements FleaDB<JsonNode> {
                 Integer multiplicity = entry.getValue();
                 FacetResult res = facets.getTopChildren(multiplicity, facetName);
                 if (res != null) {
-                    FacetResponse fr = new FacetResponse(facetName);
+                    FacetResponseImpl fr = new FacetResponseImpl(facetName);
                     fr.setNumFacetValues(res.childCount);
                     ret.add(fr);
                     LabelAndValue[] lvs = res.labelValues;
                     for (int j = 0; j < lvs.length; j++) {
                         LabelAndValue lv = lvs[j];
-                        FacetValueResponse fvresp = new FacetValueResponse(lv.label, lv.value.doubleValue());
+                        FacetValueResponseImpl fvresp = new FacetValueResponseImpl(lv.label, lv.value.doubleValue());
                         fr.getFacetValues().add(fvresp);
                     }
                 } else {
-                    FacetResponse fr = new FacetResponse(facetName);
+                    FacetResponseImpl fr = new FacetResponseImpl(facetName);
                     fr.setNumFacetValues(0);
                     ret.add(fr);
                 }
@@ -349,7 +349,7 @@ public final class GenericFleaDB implements FleaDB<JsonNode> {
         if (prefix != null) {
             double exactMultiplicity = getFacetValueMultiplicity(facetName, prefix, q);
             if (exactMultiplicity > 0) {
-                FacetValueResponse exactMatch = new FacetValueResponse(prefix, exactMultiplicity);
+                FacetValueResponseImpl exactMatch = new FacetValueResponseImpl(prefix, exactMultiplicity);
                 startingResponse.get(0).getFacetValues().remove(exactMatch);
                 startingResponse.get(0).getFacetValues().add(0, exactMatch);
             }

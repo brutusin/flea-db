@@ -489,25 +489,4 @@ public class Expression {
             return payload;
         }
     }
-
-    public static void main(String[] args) throws Exception {
-        JsonNode node = JsonCodec.getInstance().parse("{\"map\":{\"aa\":{\"booleanMap\":{\"key1\":true},\"s1\":\"s11Value\",\"s2\":[\"s2Value11\",\"s2Value21\"]},\"bb\":{\"booleanMap\":{\"key2\":false},\"s1\":\"s12Value\",\"s2\":[\"s2Value12\",\"s2Value22\"]}}}{\"map\":{\"aa\":{\"booleanMap\":{\"key1\":true},\"s1\":\"s11Value\",\"s2\":[\"s2Value11\",\"s2Value21\"]},\"bb\":{\"booleanMap\":{\"key2\":false},\"s1\":\"s12Value\",\"s2\":[\"s2Value12\",\"s2Value22\"]}}}");
-        JsonSchema schemaNode = JsonCodec.getInstance().parseSchema("{\"$schema\":\"http://json-schema.org/draft-03/schema#\",\"type\":\"object\",\"id\":\"urn:jsonschema:org:brutusin:fleadb:impl:SchemaImpl:TestClass\",\"properties\":{\"map\":{\"type\":\"object\",\"title\":\"map\",\"additionalProperties\":{\"type\":\"object\",\"id\":\"urn:jsonschema:org:brutusin:fleadb:impl:SchemaImpl:Class2\",\"properties\":{\"booleanMap\":{\"type\":\"object\",\"title\":\"booleanMap\",\"additionalProperties\":{\"type\":\"boolean\"},\"index\":\"facet\"},\"s1\":{\"type\":\"string\",\"title\":\"s1\"},\"s2\":{\"type\":\"array\",\"title\":\"s2\",\"items\":{\"type\":\"string\"},\"index\":\"index\"}}}}}}");
-
-        System.out.println(node);
-        String[] ss = new String[]{
-            "$",
-            "$.map",
-            "$.map[*]",
-            "$.map[*].booleanMap",
-            "$.map[*].booleanMap[*]",
-            "$.map[*].s2[#]",
-            "$.map[*].s2[0]",
-            "$.map[*].s2[$]"};
-        for (int i = 0; i < ss.length; i++) {
-            String s = ss[i];
-            Expression exp = Expression.compile(s);
-            System.out.println(s + "\t" + exp.projectNode(node) + "\t" + exp.projectSchema(schemaNode));
-        }
-    }
 }

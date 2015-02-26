@@ -18,8 +18,9 @@ package org.brutusin.fleadb.impl;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import org.brutusin.fleadb.impl.record.Component;
-import org.brutusin.fleadb.impl.record.Record;
+import org.brutusin.fleadb.impl.ObjectFleaDB;
+import org.brutusin.fleadb.record.Component;
+import org.brutusin.fleadb.record.Record;
 import org.junit.After;
 import org.junit.Before;
 

@@ -38,7 +38,7 @@ import org.brutusin.fleadb.Schema;
  *
  * @author Ignacio del Valle Alles idelvall@brutusin.org
  */
-public class SchemaImpl implements Schema {
+public final class SchemaImpl implements Schema {
 
     private final JsonSchema jsonSchema;
     private Map<String, JsonNode.Type> indexFields;
@@ -48,27 +48,8 @@ public class SchemaImpl implements Schema {
         this.jsonSchema = jsonSchema;
         initFields();
     }
-
-    @Override
-    public JsonSchema getJSONSChema() {
-        return this.jsonSchema;
-    }
-
-    public void setFacetFields(Map<String, Boolean> facetFields) {
-        this.facetFields = facetFields;
-    }
-
-    @Override
-    public Map<String, JsonNode.Type> getIndexFields() {
-        return indexFields;
-    }
-
-    @Override
-    public Map<String, Boolean> getFacetFields() {
-       return facetFields;
-    }
     
-    private void initFields() {
+     private void initFields() {
         this.indexFields = new LinkedHashMap();
         this.facetFields = new LinkedHashMap();
 
@@ -130,6 +111,25 @@ public class SchemaImpl implements Schema {
         }
     }
 
+    @Override
+    public JsonSchema getJSONSChema() {
+        return this.jsonSchema;
+    }
+
+    @Override
+    public Map<String, JsonNode.Type> getIndexFields() {
+        return indexFields;
+    }
+
+    @Override
+    public Map<String, Boolean> getFacetFields() {
+       return facetFields;
+    }
+    
+    public void setFacetFields(Map<String, Boolean> facetFields) {
+        this.facetFields = facetFields;
+    }
+    
     private static void addParentMapNamesToList(String name, Set<String> set) {
         String[] tokens = name.split("\\[\\*\\]");
         if (tokens == null || tokens.length == 0) {
@@ -195,85 +195,6 @@ public class SchemaImpl implements Schema {
                     }
                 }
             }
-        }
-    }
-
-    public static void main(String[] args) throws Exception {
-        // SchemaImpl s = new SchemaImpl("{\"type\":\"object\",\"properties\":{\"map\":{\"type\":\"object\",\"index\":\"index\",\"additionalProperties\":{\"type\":\"boolean\"}},\"firstName\":{\"type\":\"array\",\"items\":{\"type\":\"object\",\"properties\":{\"aaa\":{\"type\":\"string\"},\"bbb\":{\"type\":\"object\",\"additionalProperties\":{\"type\":\"string\",\"index\":\"facet\"}}}}},\"middleName\":{\"type\":\"string\",\"index\":\"index\"},\"lastName\":{\"type\":\"string\"}},\"required\":[\"firstName\",\"lastName\"],\"additionalProperties\":false}");
-        SchemaImpl s = new SchemaImpl(JsonCodec.getInstance().parseSchema(JsonCodec.getInstance().getSchemaString(TestClass.class)));
-        System.out.println(s.getJSONSChema());
-        System.out.println("Index:");
-        Map<String, JsonNode.Type> indexFields1 = s.getIndexFields();
-        for (Map.Entry<String, JsonNode.Type> entry
-                : indexFields1.entrySet()) {
-            String name = entry.getKey();
-            JsonNode.Type type = entry.getValue();
-            System.out.println(name + ":" + type);
-        }
-        System.out.println("Facet:");
-        Map<String, Boolean> facetFields1 = s.getFacetFields();
-        System.out.println(facetFields1);
-        System.out.println("---");
-        JsonNode node = JsonCodec.getInstance().parse("{\"map\":{\"aa\":{\"int1\":3,\"booleanMap\":{\"key1\":true},\"s1\":\"s11Value\",\"s2\":[\"s2Value11\",\"s2Value21\"]},\"bb\":{\"booleanMap\":{\"key2\":false},\"s1\":\"s12Value\",\"s2\":[\"s2Value12\",\"s2Value22\"]}}}{\"map\":{\"aa\":{\"booleanMap\":{\"key1\":true},\"s1\":\"s11Value\",\"s2\":[\"s2Value11\",\"s2Value21\"]},\"bb\":{\"booleanMap\":{\"key2\":false},\"s1\":\"s12Value\",\"s2\":[\"s2Value12\",\"s2Value22\"]}}}");
-        JsonTransformer transformer = new JsonTransformer(s);
-        Pair<Document, List<FacetField>> entityToDocument = transformer.entityToDocument(node);
-        System.out.println(entityToDocument);
-    }
-
-    static class Class2 {
-
-        private String s1;
-        @IndexableProperty
-        private String[] s2;
-        @IndexableProperty(mode = IndexableProperty.IndexMode.facet)
-        private Map<String, Boolean> booleanMap;
-
-        @IndexableProperty
-        private int int1;
-
-        public String getS1() {
-            return s1;
-        }
-
-        public void setS1(String s1) {
-            this.s1 = s1;
-        }
-
-        public String[] getS2() {
-            return s2;
-        }
-
-        public void setS2(String[] s2) {
-            this.s2 = s2;
-        }
-
-        public Map<String, Boolean> getBooleanMap() {
-            return booleanMap;
-        }
-
-        public void setBooleanMap(Map<String, Boolean> booleanMap) {
-            this.booleanMap = booleanMap;
-        }
-
-        public int getInt1() {
-            return int1;
-        }
-
-        public void setInt1(int int1) {
-            this.int1 = int1;
-        }
-    }
-
-    static class TestClass {
-
-        private Map<String, Class2> map;
-
-        public Map<String, Class2> getMap() {
-            return map;
-        }
-
-        public void setMap(Map<String, Class2> map) {
-            this.map = map;
         }
     }
 }

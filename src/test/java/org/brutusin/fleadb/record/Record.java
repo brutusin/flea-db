@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.brutusin.fleadb.impl.record;
+package org.brutusin.fleadb.record;
 
 import java.util.Map;
+import java.util.Set;
 import org.brutusin.commons.json.annotations.IndexableProperty;
 
 /**
@@ -32,6 +33,8 @@ public class Record {
     private Map<String, Component> components;
     @IndexableProperty
     private int age;
+    @IndexableProperty
+    private Set<Integer> integerSet;
 
     private Component mainComponent;
 
@@ -59,6 +62,14 @@ public class Record {
         this.components = components;
     }
 
+    public Set<Integer> getIntegerSet() {
+        return integerSet;
+    }
+
+    public void setIntegerSet(Set<Integer> integerSet) {
+        this.integerSet = integerSet;
+    }
+    
     public int getAge() {
         return age;
     }

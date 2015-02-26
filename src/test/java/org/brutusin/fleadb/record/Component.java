@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.brutusin.fleadb.impl.record;
+package org.brutusin.fleadb.record;
 
 import org.brutusin.commons.json.annotations.IndexableProperty;
 
