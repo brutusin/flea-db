@@ -328,7 +328,7 @@ public class Expression {
      * @return
      */
     public JsonSchema projectSchema(JsonSchema schema) {
-        JsonSchema elementSchema = getSubSchema("\"\"", new LinkedList(this.elements), schema);
+        JsonSchema elementSchema = getSubSchema("", new LinkedList(this.elements), schema);
         if(multivalued){
             try {
                 StringBuilder sb = new StringBuilder(
