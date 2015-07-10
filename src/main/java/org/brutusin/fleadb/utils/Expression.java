@@ -36,7 +36,7 @@ import static org.brutusin.commons.utils.Miscellaneous.countMatches;
  *     System.out.println(exp.getTokens());
  * </code></pre> generates the following output:
  * <pre><code>
- *     [$, map, [#], booleanMap, [*]]
+ *     [$, map, ["akey"], array, [*]]
  * </code></pre>
  *
  * @author Ignacio del Valle Alles idelvall@brutusin.org
@@ -329,7 +329,7 @@ public class Expression {
      */
     public JsonSchema projectSchema(JsonSchema schema) {
         JsonSchema elementSchema = getSubSchema("", new LinkedList(this.elements), schema);
-        if(multivalued){
+        if (multivalued) {
             try {
                 StringBuilder sb = new StringBuilder(
                         "{\"type\":\"array\",\"items\":");
@@ -488,5 +488,10 @@ public class Expression {
         public String toString() {
             return payload;
         }
+    }
+
+    public static void main(String[] args) {
+        Expression exp = Expression.compile("$.map[\"akey\"].array[*]");
+        System.out.println(exp.getTokens());
     }
 }
