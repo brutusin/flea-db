@@ -91,6 +91,8 @@ As cited before, this library makes use of the [JSON SPI](https://github.com/bru
 
 ###JSON Schema extension
 Standard JSON schema specification has been extended to declare indexable properties (`"index":"index"` and `"index":"facet"` options):
+
+Example:
 ```json
 {
   "type": "object",
