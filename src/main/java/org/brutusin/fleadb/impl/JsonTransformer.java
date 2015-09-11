@@ -28,12 +28,12 @@ import org.apache.lucene.document.StringField;
 import org.apache.lucene.facet.FacetField;
 import org.apache.lucene.index.IndexableField;
 import org.brutusin.commons.Pair;
-import org.brutusin.commons.json.ValidationException;
-import org.brutusin.commons.json.impl.Expression;
-import org.brutusin.commons.json.impl.LazyJsonNode;
-import org.brutusin.commons.json.spi.JsonCodec;
-import org.brutusin.commons.json.spi.JsonNode;
-import org.brutusin.commons.json.spi.JsonSchema;
+import org.brutusin.json.ValidationException;
+import org.brutusin.json.impl.Expression;
+import org.brutusin.json.impl.LazyJsonNode;
+import org.brutusin.json.spi.JsonCodec;
+import org.brutusin.json.spi.JsonNode;
+import org.brutusin.json.spi.JsonSchema;
 import org.brutusin.fleadb.DocTransformer;
 import org.brutusin.fleadb.Schema;
 

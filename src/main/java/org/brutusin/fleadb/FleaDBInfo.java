@@ -18,9 +18,9 @@ package org.brutusin.fleadb;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import org.brutusin.commons.json.ParseException;
-import org.brutusin.commons.json.spi.JsonCodec;
-import org.brutusin.commons.json.spi.JsonNode;
+import org.brutusin.json.ParseException;
+import org.brutusin.json.spi.JsonCodec;
+import org.brutusin.json.spi.JsonNode;
 import org.brutusin.commons.utils.Miscellaneous;
 import org.brutusin.fleadb.impl.SchemaImpl;
 

@@ -25,7 +25,7 @@ import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TermRangeQuery;
 import org.apache.lucene.search.WildcardQuery;
 import org.apache.lucene.util.BytesRef;
-import org.brutusin.commons.json.spi.JsonNode;
+import org.brutusin.json.spi.JsonNode;
 import org.brutusin.fleadb.Schema;
 
 /**

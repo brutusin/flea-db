@@ -17,7 +17,7 @@ package org.brutusin.fleadb.record;
 
 import java.util.Map;
 import java.util.Set;
-import org.brutusin.commons.json.annotations.IndexableProperty;
+import org.brutusin.json.annotations.IndexableProperty;
 
 /**
  *

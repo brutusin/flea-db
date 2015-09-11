@@ -16,8 +16,8 @@
 package org.brutusin.fleadb;
 
 import java.util.Map;
-import org.brutusin.commons.json.spi.JsonNode;
-import org.brutusin.commons.json.spi.JsonSchema;
+import org.brutusin.json.spi.JsonNode;
+import org.brutusin.json.spi.JsonSchema;
 
 /**
  * Flea-db database schema.

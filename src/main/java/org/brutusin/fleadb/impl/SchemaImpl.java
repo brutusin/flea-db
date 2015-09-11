@@ -20,12 +20,12 @@ import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
-import org.brutusin.commons.json.ParseException;
-import org.brutusin.commons.json.annotations.IndexableProperty;
-import org.brutusin.commons.json.spi.JsonNode;
-import org.brutusin.commons.json.spi.JsonSchema;
-import org.brutusin.commons.json.util.JsonNodeVisitor;
-import org.brutusin.commons.json.util.JsonSchemaUtils;
+import org.brutusin.json.ParseException;
+import org.brutusin.json.annotations.IndexableProperty;
+import org.brutusin.json.spi.JsonNode;
+import org.brutusin.json.spi.JsonSchema;
+import org.brutusin.json.util.JsonNodeVisitor;
+import org.brutusin.json.util.JsonSchemaUtils;
 import org.brutusin.fleadb.Schema;
 
 /**

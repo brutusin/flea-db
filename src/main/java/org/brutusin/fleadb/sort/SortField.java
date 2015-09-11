@@ -15,7 +15,7 @@
  */
 package org.brutusin.fleadb.sort;
 
-import org.brutusin.commons.json.spi.JsonNode;
+import org.brutusin.json.spi.JsonNode;
 import org.brutusin.fleadb.Schema;
 
 /**

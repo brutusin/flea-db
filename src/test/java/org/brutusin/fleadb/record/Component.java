@@ -15,7 +15,7 @@
  */
 package org.brutusin.fleadb.record;
 
-import org.brutusin.commons.json.annotations.IndexableProperty;
+import org.brutusin.json.annotations.IndexableProperty;
 
 /**
  *
