@@ -29,12 +29,13 @@ import org.apache.lucene.facet.FacetField;
 import org.apache.lucene.index.IndexableField;
 import org.brutusin.commons.Pair;
 import org.brutusin.commons.json.ValidationException;
+import org.brutusin.commons.json.impl.Expression;
 import org.brutusin.commons.json.impl.LazyJsonNode;
+import org.brutusin.commons.json.spi.JsonCodec;
 import org.brutusin.commons.json.spi.JsonNode;
 import org.brutusin.commons.json.spi.JsonSchema;
 import org.brutusin.fleadb.DocTransformer;
 import org.brutusin.fleadb.Schema;
-import org.brutusin.fleadb.utils.Expression;
 
 /**
  *
@@ -100,7 +101,7 @@ public class JsonTransformer implements DocTransformer<JsonNode> {
 
         for (Map.Entry<String, JsonNode.Type> entry : fields.entrySet()) {
             String indexField = entry.getKey();
-            Expression exp = Expression.compile(indexField);
+            Expression exp = JsonCodec.getInstance().compile(indexField);
             JsonNode projectedNode = exp.projectNode(jsonNode);
             if (projectedNode != null) {
                 addLuceneIndexFields(indexField, indexFields, projectedNode, exp.projectSchema(jsonSchema));
@@ -109,7 +110,7 @@ public class JsonTransformer implements DocTransformer<JsonNode> {
 
         Map<String, Boolean> facetFields = this.schema.getFacetFields();
         for (String facetField : facetFields.keySet()) {
-            Expression exp = Expression.compile(facetField);
+            Expression exp = JsonCodec.getInstance().compile(facetField);
             JsonNode projectedNode = exp.projectNode(jsonNode);
             if (projectedNode != null) {
                 addLuceneFacets(facetField, facets, projectedNode);
