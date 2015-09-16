@@ -133,10 +133,10 @@ Then, the following rules apply to extract index and facet values that field:
 |--------|-------------|------------
 |String|`fieldNode.asString()`|`fieldNode.asString()`
 |Boolean|`fieldNode.asString()`|`fieldNode.asString()`
-|Integer|`fieldNode.asLong()`| <Unsupported>
-|Number|`fieldNode.asDouble()`|<Unsupported>
-|Object|<each of its property names>|<each of its property names>
-|Array|<recurse for each of its elements>|<recurse for each of its elements>
+|Integer|`fieldNode.asLong()`| Unsupported
+|Number|`fieldNode.asDouble()`|Unsupported
+|Object|each of its property names|each of its property names
+|Array|recurse for each of its elements|recurse for each of its elements
 
 ##Usage
 ### Database persistence
