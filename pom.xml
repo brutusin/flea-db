@@ -9,7 +9,7 @@
     <groupId>org.brutusin</groupId>
     <artifactId>flea-db</artifactId>
     <packaging>jar</packaging>   
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.1</version>
     <name>${project.groupId}:${project.artifactId}</name>
     <description>A tiny, embeddable, schema-full, JSON database</description>
     <url>https://github.com/brutusin/flea-db</url>
@@ -32,7 +32,7 @@
         <url>https://github.com/brutusin/flea-db</url>
         <connection>scm:git:https://github.com/brutusin/flea-db.git</connection>
         <developerConnection>scm:git:https://github.com/brutusin/flea-db.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>v1.0.1</tag>
     </scm>
 	
     <dependencies>
