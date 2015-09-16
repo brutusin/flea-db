@@ -25,6 +25,7 @@ Built on top of [Apache Lucene](http://lucene.apache.org/core/).
     - [JSON Schema extension](#json-schema-extension)
     - [Annotations](#annotations)
     - [Indexed fields nomenclature](#indexed-fields-nomenclature)
+    - [Indexation values](#indexation-values)
   - [Usage](#usage)
     - [Database persistence](#database-persistence)
     - [Write operations](#write-operations)
@@ -64,33 +65,33 @@ Click [here](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22org.brutusin%22%2
 If you are not using maven and need help you can ask [here](https://github.com/brutusin/flea-db/issues).
 
 ##APIs
-All *flea-db* functionality is defined by [FleaDB](src/main/java/org/brutusin/fleadb/FleaDB.java) interface. 
+All `flea-db` functionality is defined by [`FleaDB`](src/main/java/org/brutusin/fleadb/FleaDB.java) interface. 
 
 The library provides two implementations for it:
 
-1. A low-level generic implementation [GenericFleaDB](src/main/java/org/brutusin/fleadb/impl/GenericFleaDB.java).
-2. A high-level strong-typed implementation [ObjectFleaDB](src/main/java/org/brutusin/fleadb/impl/ObjectFleaDB.java) built on top of the previous one.
+1. A low-level generic implementation [`GenericFleaDB`](src/main/java/org/brutusin/fleadb/impl/GenericFleaDB.java).
+2. A high-level strong-typed implementation [`ObjectFleaDB`](src/main/java/org/brutusin/fleadb/impl/ObjectFleaDB.java) built on top of the previous one.
 
 ###GenericFleaDB
-[GenericFleaDB](src/main/java/org/brutusin/fleadb/impl/GenericFleaDB.java) is the lowest level *flea-db* implementation that defines the database schema using a JSON schema and stores and indexes records of type [JsonNode](https://github.com/brutusin/json/tree/master/src/main/java/org/brutusin/json/spi/JsonNode.java). It uses *Apache Lucene* APIs and [org.brutusin:json SPI](https://github.com/brutusin/json) to maintain two different indexes (one for the terms and other for the taxonomy, see [index structure](#index-structure)), hyding the underlying complexity from the user perspective.
+[`GenericFleaDB`](src/main/java/org/brutusin/fleadb/impl/GenericFleaDB.java) is the lowest level *flea-db* implementation that defines the database schema using a JSON schema and stores and indexes records of type [`JsonNode`](https://github.com/brutusin/json/tree/master/src/main/java/org/brutusin/json/spi/JsonNode.java). It uses *Apache Lucene* APIs and [`org.brutusin:json` SPI](https://github.com/brutusin/json) to maintain two different indexes (one for the terms and other for the taxonomy, see [index structure](#index-structure)), hyding the underlying complexity from the user perspective.
 
 This is how it works:
-* **On instantiation**: A [JsonSchema](https://github.com/brutusin/json/tree/master/src/main/java/org/brutusin/json/spi/JsonSchema.java) and an index folder are passed depending on whether the database is new and/or persistent. Then the JSON schema (passed or readed from the existing database `flea.json` descriptor file) is processed, looking for its [`index`](#json-schema-extension) properties, and finally a database [Schema](src/main/java/org/brutusin/fleadb/Schema.java) is created.
+* **On instantiation**: A [`JsonSchema`](https://github.com/brutusin/json/tree/master/src/main/java/org/brutusin/json/spi/JsonSchema.java) and an index folder are passed depending on whether the database is new and/or persistent. Then the JSON schema (passed or readed from the existing database `flea.json` descriptor file) is processed, looking for its [`index`](#json-schema-extension) properties, and finally a database [schema](src/main/java/org/brutusin/fleadb/Schema.java) is created.
 * **On storing**: The passed `JsonNode` record is validated against the JSON schema. Then a [JsonTransformer](src/main/java/org/brutusin/fleadb/impl/JsonTransformer.java) instance (making use of the processed database schema) transforms the records in terms understandable by *Lucene* (*documents*, *fields*, *facet fields* ...) and finally the storage is delegated to the *Lucene* API.
 * **On commit**: Underlying index and taxonomy writters are commited and searchers are refreshed to reflect the changes.
-* **On querying**: The [Query](src/main/java/org/brutusin/fleadb/query) and [Sort](src/main/java/org/brutusin/fleadb/sort/Sort.java) objects are transformed into terms understandable by *Lucene* making use of the database schema. The returned [Paginator](src/main/java/org/brutusin/fleadb/pagination) is basically a wrapper around the underlying luecene `IndexSearcher` and `Query` objects that lazily (on demand) performs searches to the index.
+* **On querying**: The [Query](src/main/java/org/brutusin/fleadb/query) and [Sort](src/main/java/org/brutusin/fleadb/sort/Sort.java) objects are transformed into terms understandable by *Lucene* making use of the database schema. The returned [paginator](src/main/java/org/brutusin/fleadb/pagination) is basically a wrapper around the underlying luecene `IndexSearcher` and `Query` objects that lazily (on demand) performs searches to the index.
 
 ###ObjectFleaDB
-[ObjectFleaDB](src/main/java/org/brutusin/fleadb/impl/ObjectFleaDB.java) is built on top of *GenericFleaDB*.
+[`ObjectFleaDB`](src/main/java/org/brutusin/fleadb/impl/ObjectFleaDB.java) is built on top of `GenericFleaDB`.
 
-Basically an *ObjectFleaDB* delegates all its functionality to a wrapped *GenericFleaDB* instance, making use of `org.brutusin:json` to perform transformations `POJO<->JsonNode` and `Class<->JsonSchema`. This is the reason why all *flea-db* databases can be used with *GenericFleaDB*.
+Basically an `ObjectFleaDB` delegates all its functionality to a wrapped `GenericFleaDB` instance, making use of `org.brutusin:json` to perform transformations `POJO<->JsonNode` and `Class<->JsonSchema`. This is the reason why all `flea-db` databases can be used with `GenericFleaDB`.
 
 ## Schema
 ###JSON SPI
-As cited before, this library makes use of the [`org.brutusin:json`](https://github.com/brutusin/json), so a JSON service provider like [json-provider](https://github.com/brutusin/json-provider) is needed at runtime. The choosen provider will determine JSON serialization, validation, parsing, schema generation and expression semantics.
+As cited before, this library makes use of the [`org.brutusin:json`](https://github.com/brutusin/json), so a JSON service provider like [`json-provider`](https://github.com/brutusin/json-provider) is needed at runtime. The choosen provider will determine JSON serialization, validation, parsing, schema generation and expression semantics.
 
 ###JSON Schema extension
-Standard JSON schema specification has been extended to declare indexable properties (`"index":"index"` and `"index":"facet"` options):
+Standard JSON schema specification has been extended to declare indexable properties (`"index":"index"` and `"index":"facet"` options). See [annotations section](#annotations) for more details.
 
 Example:
 ```json
@@ -115,9 +116,27 @@ Example:
 See [documentation in JSON SPI](https://github.com/brutusin/json/tree/master/src/main/java/org/brutusin/json/annotations) for supported annotations used in the strong-typed scenario.
 
 ###Indexed fields nomenclature
-Databases are self descriptive, they provide information of their schema and indexed fields (via [Schema](src/main/java/org/brutusin/fleadb/Schema.java)). 
+Databases are self descriptive, they provide information of their schema and indexed fields (via [`Schema`](src/main/java/org/brutusin/fleadb/Schema.java)). 
 
-Field semantics are inherited from the expression semantics defined in the [org.brutusin:json-provider](https://github.com/brutusin/json-provider/blob/master/README.md#expression-dsl)
+Field semantics are inherited from the expression semantics defined in the [`org.brutusin:json-provider`](https://github.com/brutusin/json-provider/blob/master/README.md#expression-dsl)
+
+### Indexation values
+Supose `JsonNode node` to be stored and let `fieldId` be the expression identifying a database field, according to the previous section. 
+```java
+Expression exp = JsonCodec.getInstance().compile(fieldId);
+JsonSchema fieldSchema = exp.projectSchema(rootSchema);
+JsonNode fieldNode = exp.projectNode(node);
+```
+Then, the following rules apply to extract index and facet values that field:
+
+|fieldSchema| index:index | index:facet
+|--------|-------------|------------
+|String|`fieldNode.asString()`|`fieldNode.asString()`
+|Boolean|`fieldNode.asString()`|`fieldNode.asString()`
+|Integer|`fieldNode.asLong()`| <Unsupported>
+|Number|`fieldNode.asDouble()`|<Unsupported>
+|Object|<each of its property names>|<each of its property names>
+|Array|<recurse for each of its elements>|<recurse for each of its elements>
 
 ##Usage
 ### Database persistence
