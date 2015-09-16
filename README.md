@@ -77,9 +77,9 @@ The library provides two implementations for it:
 
 This is how it works:
 * **On instantiation**: A [`JsonSchema`](https://github.com/brutusin/json/tree/master/src/main/java/org/brutusin/json/spi/JsonSchema.java) and an index folder are passed depending on whether the database is new and/or persistent. Then the JSON schema (passed or readed from the existing database `flea.json` descriptor file) is processed, looking for its [`index`](#json-schema-extension) properties, and finally a database [schema](src/main/java/org/brutusin/fleadb/Schema.java) is created.
-* **On storing**: The passed `JsonNode` record is validated against the JSON schema. Then a [JsonTransformer](src/main/java/org/brutusin/fleadb/impl/JsonTransformer.java) instance (making use of the processed database schema) transforms the records in terms understandable by *Lucene* (*documents*, *fields*, *facet fields* ...) and finally the storage is delegated to the *Lucene* API.
+* **On storing**: The passed `JsonNode` record is validated against the JSON schema. Then a [`JsonTransformer`](src/main/java/org/brutusin/fleadb/impl/JsonTransformer.java) instance (making use of the processed database schema) transforms the records in terms understandable by *Lucene* (*documents*, *fields*, *facet fields* ...) and finally the storage is delegated to the *Lucene* API.
 * **On commit**: Underlying index and taxonomy writters are commited and searchers are refreshed to reflect the changes.
-* **On querying**: The [Query](src/main/java/org/brutusin/fleadb/query) and [Sort](src/main/java/org/brutusin/fleadb/sort/Sort.java) objects are transformed into terms understandable by *Lucene* making use of the database schema. The returned [paginator](src/main/java/org/brutusin/fleadb/pagination) is basically a wrapper around the underlying luecene `IndexSearcher` and `Query` objects that lazily (on demand) performs searches to the index.
+* **On querying**: The [`Query`](src/main/java/org/brutusin/fleadb/query) and [`Sort`](src/main/java/org/brutusin/fleadb/sort/Sort.java) objects are transformed into terms understandable by *Lucene* making use of the database schema. The returned [paginator](src/main/java/org/brutusin/fleadb/pagination) is basically a wrapper around the underlying luecene `IndexSearcher` and `Query` objects that lazily (on demand) performs searches to the index.
 
 ###ObjectFleaDB
 [`ObjectFleaDB`](src/main/java/org/brutusin/fleadb/impl/ObjectFleaDB.java) is built on top of `GenericFleaDB`.
@@ -192,7 +192,7 @@ Record queries can be [paginated](http://en.wikipedia.org/wiki/Pagination#Pagina
 * `public Paginator<E> query(final Query q, final Sort sort)`
 
 #### Facet queries
-[FacetResponse](src/main/java/org/brutusin/fleadb/facet/FacetResponse.java) represents the faceting info returned by the database.
+[`FacetResponse`](src/main/java/org/brutusin/fleadb/facet/FacetResponse.java) represents the faceting info returned by the database.
 
 * `public List<FacetResponse> getFacetValues(final Query q, FacetMultiplicities activeFacets)`
 * `public List<FacetResponse> getFacetValues(final Query q, int maxFacetValues)`
