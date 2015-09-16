@@ -122,11 +122,13 @@ Field semantics are inherited from the expression semantics defined in the [`org
 
 ### Indexation values
 Supose `JsonNode node` to be stored and let `fieldId` be the expression identifying a database field, according to the previous section. 
+
 ```java
 Expression exp = JsonCodec.getInstance().compile(fieldId);
 JsonSchema fieldSchema = exp.projectSchema(rootSchema);
 JsonNode fieldNode = exp.projectNode(node);
 ```
+
 Then, the following rules apply to extract index and facet values that field:
 
 |fieldSchema| index:index | index:facet
