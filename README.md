@@ -129,7 +129,7 @@ JsonSchema fieldSchema = exp.projectSchema(rootSchema);
 JsonNode fieldNode = exp.projectNode(node);
 ```
 
-Then, the following rules apply to extract index and facet values that field:
+Then, the following rules apply to extract index and facet values for that field:
 
 |fieldSchema| index:index | index:facet
 |--------|-------------|------------
