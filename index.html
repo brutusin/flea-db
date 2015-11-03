@@ -1,0 +1,527 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Flea-db by brutusin</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/github-dark.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="stylesheets/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/brutusin/flea-db">View On GitHub</a></li>
+          <li class="downloads"><a href="https://github.com/brutusin/flea-db/zipball/master">ZIP</a></li>
+          <li class="downloads"><a href="https://github.com/brutusin/flea-db/tarball/master">TAR</a></li>
+          <li class="title">DOWNLOADS</li>
+        </nav>
+      </div><!-- end header -->
+
+    <div class="wrapper">
+
+      <section>
+        <div id="title">
+          <h1>Flea-db</h1>
+          <p>A java library for creating standalone, portable, schema-full object databases supporting pagination and faceted search, and offering strong-typed and generic APIs. Built on top of Apache Lucene.</p>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/brutusin">brutusin</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="https://twitter.com/michigangraham">mattgraham</a></span>
+        </div>
+
+        <h1>
+<a id="orgbrutusinflea-db--" class="anchor" href="#orgbrutusinflea-db--" aria-hidden="true"><span class="octicon octicon-link"></span></a>org.brutusin:flea-db <a href="https://travis-ci.org/brutusin/flea-db"><img src="https://api.travis-ci.org/brutusin/flea-db.svg?branch=master" alt="Build Status"></a> <a href="https://maven-badges.herokuapp.com/maven-central/org.brutusin/flea-db/"><img src="https://maven-badges.herokuapp.com/maven-central/org.brutusin/flea-db/badge.svg" alt="Maven Central Latest Version"></a>
+</h1>
+
+<p>A java library for creating standalone, portable, schema-full object databases supporting <a href="http://en.wikipedia.org/wiki/Pagination#Pagination_in_web_content">pagination</a> and <a href="http://en.wikipedia.org/wiki/Faceted_search">faceted search</a>, and offering strong-typed and generic APIs.</p>
+
+<p>Built on top of <a href="http://lucene.apache.org/core/">Apache Lucene</a>.</p>
+
+<p><strong>Main features:</strong></p>
+
+<ul>
+<li>Schema-full/self-descriptive</li>
+<li>Simple and powerful API. Strong-typed and generic flavors</li>
+<li>High robustness. Record, field names and type validation.</li>
+<li>Pagination</li>
+<li>Faceted search</li>
+<li>In memory and persistent versions</li>
+</ul>
+
+<p><strong>Table of Contents:</strong> </p>
+
+<ul>
+<li>
+<a href="#">org.brutusin:flea-db</a>
+
+<ul>
+<li><a href="#motivation">Motivation</a></li>
+<li><a href="#maven-dependency">Maven dependency</a></li>
+<li>
+<a href="#apis">APIs</a>
+
+<ul>
+<li><a href="#genericfleadb">GenericFleaDB</a></li>
+<li><a href="#objectfleadb">ObjectFleaDB</a></li>
+</ul>
+</li>
+<li>
+<a href="#schema">Schema</a>
+
+<ul>
+<li><a href="#json-spi">JSON SPI</a></li>
+<li><a href="#json-schema-extension">JSON Schema extension</a></li>
+<li><a href="#annotations">Annotations</a></li>
+<li><a href="#indexed-fields-nomenclature">Indexed fields nomenclature</a></li>
+<li><a href="#indexation-values">Indexation values</a></li>
+</ul>
+</li>
+<li>
+<a href="#usage">Usage</a>
+
+<ul>
+<li><a href="#database-persistence">Database persistence</a></li>
+<li>
+<a href="#write-operations">Write operations</a>
+
+<ul>
+<li><a href="#store">Store</a></li>
+<li><a href="#delete">Delete</a></li>
+<li><a href="#commit">Commit</a></li>
+<li><a href="#optimization">Optimization</a></li>
+</ul>
+</li>
+<li>
+<a href="#read-operations">Read operations</a>
+
+<ul>
+<li><a href="#record-queries">Record queries</a></li>
+<li><a href="#facet-queries">Facet queries</a></li>
+</ul>
+</li>
+<li><a href="#closing">Closing</a></li>
+</ul>
+</li>
+<li><a href="#index-structure">Index structure</a></li>
+<li><a href="#acid-properties">ACID properties</a></li>
+<li><a href="#examples">Examples</a></li>
+<li><a href="#main-stack">Main stack</a></li>
+<li><a href="#lucene-version">Lucene version</a></li>
+<li><a href="#support-bugs-and-requests">Support, bugs and requests</a></li>
+<li><a href="#authors">Authors</a></li>
+<li><a href="#license">License</a></li>
+</ul>
+</li>
+</ul>
+
+<h2>
+<a id="motivation" class="anchor" href="#motivation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Motivation</h2>
+
+<ul>
+<li>Create a library with a very simple API, self-descriptive with high robustness aimed at indexing objects and providing advanced search capabilities, pagination and faceted search. </li>
+<li>Originally born with the purpose of indexing raw data files, and (almost) steady data sets.</li>
+<li>
+<em>Lucene</em> is an extense and powerful low level library, but its API is not very easy to understand.</li>
+<li>Putting schemas into play, self-description can be used to simplify API (fields type), to provide strong validation mechanisms, and to enable the creation of flexible and generic downstream components.</li>
+<li>
+<em>Lucene</em> has a lot of experimental APIs that may (and use to) change in time. This library adds a level of indirection. providing a stable high level interface. Upgrades in the underlying <em>Lucene</em> version are absorved by <em>flea-db</em>.</li>
+</ul>
+
+<h2>
+<a id="maven-dependency" class="anchor" href="#maven-dependency" aria-hidden="true"><span class="octicon octicon-link"></span></a>Maven dependency</h2>
+
+<div class="highlight highlight-text-xml"><pre>&lt;<span class="pl-ent">dependency</span>&gt;
+    &lt;<span class="pl-ent">groupId</span>&gt;org.brutusin&lt;/<span class="pl-ent">groupId</span>&gt;
+    &lt;<span class="pl-ent">artifactId</span>&gt;flea-db&lt;/<span class="pl-ent">artifactId</span>&gt;
+&lt;/<span class="pl-ent">dependency</span>&gt;</pre></div>
+
+<p>Click <a href="http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22org.brutusin%22%20a%3A%22flea-db%22">here</a> to see the latest available version released to the Maven Central Repository.</p>
+
+<p>If you are not using maven and need help you can ask <a href="https://github.com/brutusin/flea-db/issues">here</a>.</p>
+
+<h2>
+<a id="apis" class="anchor" href="#apis" aria-hidden="true"><span class="octicon octicon-link"></span></a>APIs</h2>
+
+<p>All <code>flea-db</code> functionality is defined by <a href="src/main/java/org/brutusin/fleadb/FleaDB.java"><code>FleaDB</code></a> interface. </p>
+
+<p>The library provides two implementations for it:</p>
+
+<ol>
+<li>A low-level generic implementation <a href="src/main/java/org/brutusin/fleadb/impl/GenericFleaDB.java"><code>GenericFleaDB</code></a>.</li>
+<li>A high-level strong-typed implementation <a href="src/main/java/org/brutusin/fleadb/impl/ObjectFleaDB.java"><code>ObjectFleaDB</code></a> built on top of the previous one.</li>
+</ol>
+
+<h3>
+<a id="genericfleadb" class="anchor" href="#genericfleadb" aria-hidden="true"><span class="octicon octicon-link"></span></a>GenericFleaDB</h3>
+
+<p><a href="src/main/java/org/brutusin/fleadb/impl/GenericFleaDB.java"><code>GenericFleaDB</code></a> is the lowest level <em>flea-db</em> implementation that defines the database schema using a JSON schema and stores and indexes records of type <a href="https://github.com/brutusin/json/tree/master/src/main/java/org/brutusin/json/spi/JsonNode.java"><code>JsonNode</code></a>. It uses <em>Apache Lucene</em> APIs and <a href="https://github.com/brutusin/json"><code>org.brutusin:json</code> SPI</a> to maintain two different indexes (one for the terms and other for the taxonomy, see <a href="#index-structure">index structure</a>), hyding the underlying complexity from the user perspective.</p>
+
+<p>This is how it works:</p>
+
+<ul>
+<li>
+<strong>On instantiation</strong>: A <a href="https://github.com/brutusin/json/tree/master/src/main/java/org/brutusin/json/spi/JsonSchema.java"><code>JsonSchema</code></a> and an index folder are passed depending on whether the database is new and/or persistent. Then the JSON schema (passed or readed from the existing database <code>flea.json</code> descriptor file) is processed, looking for its <a href="#json-schema-extension"><code>index</code></a> properties, and finally a database <a href="src/main/java/org/brutusin/fleadb/Schema.java">schema</a> is created.</li>
+<li>
+<strong>On storing</strong>: The passed <code>JsonNode</code> record is validated against the JSON schema. Then a <a href="src/main/java/org/brutusin/fleadb/impl/JsonTransformer.java"><code>JsonTransformer</code></a> instance (making use of the processed database schema) transforms the records in terms understandable by <em>Lucene</em> (<em>documents</em>, <em>fields</em>, <em>facet fields</em> ...) and finally the storage is delegated to the <em>Lucene</em> API.</li>
+<li>
+<strong>On commit</strong>: Underlying index and taxonomy writters are commited and searchers are refreshed to reflect the changes.</li>
+<li>
+<strong>On querying</strong>: The <a href="src/main/java/org/brutusin/fleadb/query"><code>Query</code></a> and <a href="src/main/java/org/brutusin/fleadb/sort/Sort.java"><code>Sort</code></a> objects are transformed into terms understandable by <em>Lucene</em> making use of the database schema. The returned <a href="src/main/java/org/brutusin/fleadb/pagination">paginator</a> is basically a wrapper around the underlying luecene <code>IndexSearcher</code> and <code>Query</code> objects that lazily (on demand) performs searches to the index.</li>
+</ul>
+
+<h3>
+<a id="objectfleadb" class="anchor" href="#objectfleadb" aria-hidden="true"><span class="octicon octicon-link"></span></a>ObjectFleaDB</h3>
+
+<p><a href="src/main/java/org/brutusin/fleadb/impl/ObjectFleaDB.java"><code>ObjectFleaDB</code></a> is built on top of <code>GenericFleaDB</code>.</p>
+
+<p>Basically an <code>ObjectFleaDB</code> delegates all its functionality to a wrapped <code>GenericFleaDB</code> instance, making use of <code>org.brutusin:json</code> to perform transformations <code>POJO&lt;-&gt;JsonNode</code> and <code>Class&lt;-&gt;JsonSchema</code>. This is the reason why all <code>flea-db</code> databases can be used with <code>GenericFleaDB</code>.</p>
+
+<h2>
+<a id="schema" class="anchor" href="#schema" aria-hidden="true"><span class="octicon octicon-link"></span></a>Schema</h2>
+
+<h3>
+<a id="json-spi" class="anchor" href="#json-spi" aria-hidden="true"><span class="octicon octicon-link"></span></a>JSON SPI</h3>
+
+<p>As cited before, this library makes use of the <a href="https://github.com/brutusin/json"><code>org.brutusin:json</code></a>, so a JSON service provider like <a href="https://github.com/brutusin/json-provider"><code>json-provider</code></a> is needed at runtime. The choosen provider will determine JSON serialization, validation, parsing, schema generation and expression semantics.</p>
+
+<h3>
+<a id="json-schema-extension" class="anchor" href="#json-schema-extension" aria-hidden="true"><span class="octicon octicon-link"></span></a>JSON Schema extension</h3>
+
+<p>Standard JSON schema specification has been extended to declare indexable properties (<code>"index":"index"</code> and <code>"index":"facet"</code> options). See <a href="#annotations">annotations section</a> for more details.</p>
+
+<p>Example:</p>
+
+<div class="highlight highlight-source-json"><pre>{
+  <span class="pl-s"><span class="pl-pds">"</span>type<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>object<span class="pl-pds">"</span></span>,
+  <span class="pl-s"><span class="pl-pds">"</span>properties<span class="pl-pds">"</span></span>: {
+    <span class="pl-s"><span class="pl-pds">"</span>age<span class="pl-pds">"</span></span>: {
+      <span class="pl-s"><span class="pl-pds">"</span>type<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>integer<span class="pl-pds">"</span></span>,
+      <span class="pl-s"><span class="pl-pds">"</span>index<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>index<span class="pl-pds">"</span></span>
+    },
+    <span class="pl-s"><span class="pl-pds">"</span>category<span class="pl-pds">"</span></span>: {
+      <span class="pl-s"><span class="pl-pds">"</span>type<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>string<span class="pl-pds">"</span></span>,
+      <span class="pl-s"><span class="pl-pds">"</span>index<span class="pl-pds">"</span></span>: <span class="pl-s"><span class="pl-pds">"</span>facet<span class="pl-pds">"</span></span>
+    }
+  }
+}</pre></div>
+
+<ul>
+<li>
+<code>"index":"index"</code>: Means that the property is indexed by <em>Lucene</em> under a field with name set according to the rules explained in <a href="#indexed-fields-nomenclature">nomenclature section</a>.</li>
+<li>
+<code>"index":"facet"</code>: Means that the property is indexed as in the previous case, but also a facet is created with this field name.</li>
+</ul>
+
+<h3>
+<a id="annotations" class="anchor" href="#annotations" aria-hidden="true"><span class="octicon octicon-link"></span></a>Annotations</h3>
+
+<p>See <a href="https://github.com/brutusin/json/tree/master/src/main/java/org/brutusin/json/annotations">documentation in JSON SPI</a> for supported annotations used in the strong-typed scenario.</p>
+
+<h3>
+<a id="indexed-fields-nomenclature" class="anchor" href="#indexed-fields-nomenclature" aria-hidden="true"><span class="octicon octicon-link"></span></a>Indexed fields nomenclature</h3>
+
+<p>Databases are self descriptive, they provide information of their schema and indexed fields (via <a href="src/main/java/org/brutusin/fleadb/Schema.java"><code>Schema</code></a>). </p>
+
+<p>Field semantics are inherited from the expression semantics defined in the <a href="https://github.com/brutusin/json-provider/blob/master/README.md#expression-dsl"><code>org.brutusin:json-provider</code></a></p>
+
+<h3>
+<a id="indexation-values" class="anchor" href="#indexation-values" aria-hidden="true"><span class="octicon octicon-link"></span></a>Indexation values</h3>
+
+<p>Supose <code>JsonNode node</code> to be stored and let <code>fieldId</code> be the expression identifying a database field, according to the previous section. </p>
+
+<div class="highlight highlight-source-java"><pre><span class="pl-smi">Expression</span> exp <span class="pl-k">=</span> <span class="pl-smi">JsonCodec</span><span class="pl-k">.</span>getInstance()<span class="pl-k">.</span>compile(fieldId);
+<span class="pl-smi">JsonSchema</span> fieldSchema <span class="pl-k">=</span> exp<span class="pl-k">.</span>projectSchema(rootSchema);
+<span class="pl-smi">JsonNode</span> fieldNode <span class="pl-k">=</span> exp<span class="pl-k">.</span>projectNode(node);</pre></div>
+
+<p>Then, the following rules apply to extract index and facet values for that field:</p>
+
+<table>
+<thead>
+<tr>
+<th>fieldSchema</th>
+<th>index:index</th>
+<th>index:facet</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>String</td>
+<td><code>fieldNode.asString()</code></td>
+<td><code>fieldNode.asString()</code></td>
+</tr>
+<tr>
+<td>Boolean</td>
+<td><code>fieldNode.asString()</code></td>
+<td><code>fieldNode.asString()</code></td>
+</tr>
+<tr>
+<td>Integer</td>
+<td><code>fieldNode.asLong()</code></td>
+<td>Unsupported</td>
+</tr>
+<tr>
+<td>Number</td>
+<td><code>fieldNode.asDouble()</code></td>
+<td>Unsupported</td>
+</tr>
+<tr>
+<td>Object</td>
+<td>each of its property names</td>
+<td>each of its property names</td>
+</tr>
+<tr>
+<td>Array</td>
+<td>recurse for each of its elements</td>
+<td>recurse for each of its elements</td>
+</tr>
+</tbody>
+</table>
+
+<h2>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h2>
+
+<h3>
+<a id="database-persistence" class="anchor" href="#database-persistence" aria-hidden="true"><span class="octicon octicon-link"></span></a>Database persistence</h3>
+
+<p>Databases can be created in RAM memory or in disk, depending on the addressed problem characteristics (performance, dataset size, indexation time ...).</p>
+
+<p>In order to create a persistent database, a constructor(s) with a <code>File</code> argument has to be choosen:</p>
+
+<div class="highlight highlight-source-java"><pre><span class="pl-smi">Flea</span> db1 <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">GenericFleaDB</span>(indexFolder, jsonSchema);
+<span class="pl-c">// or</span>
+<span class="pl-smi">Flea</span> db2 <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">ObjectFleaDB</span>(indexFolder, <span class="pl-smi">Record</span><span class="pl-k">.</span>class);</pre></div>
+
+<blockquote>
+<p>NOTE: Multiple instances can be used to read the same persistent database (for example different concurrent JVM executions), but only one can hold the writing file-lock (claimed the first time a write method is called).</p>
+</blockquote>
+
+<p>On the other side, the database will be kept in RAM memory and lost at the end of the JVM execution.</p>
+
+<div class="highlight highlight-source-java"><pre><span class="pl-smi">Flea</span> db1 <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">GenericFleaDB</span>(jsonSchema);
+<span class="pl-c">// or</span>
+<span class="pl-smi">Flea</span> db2 <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">ObjectFleaDB</span>(<span class="pl-smi">Record</span><span class="pl-k">.</span>class);</pre></div>
+
+<h3>
+<a id="write-operations" class="anchor" href="#write-operations" aria-hidden="true"><span class="octicon octicon-link"></span></a>Write operations</h3>
+
+<p>The following operations perform modifications on the database.</p>
+
+<h4>
+<a id="store" class="anchor" href="#store" aria-hidden="true"><span class="octicon octicon-link"></span></a>Store</h4>
+
+<p>In order to store a record the <code>store(...)</code> method has to be used:</p>
+
+<div class="highlight highlight-source-java"><pre>db1<span class="pl-k">.</span>store(jsonNode);
+<span class="pl-c">// or</span>
+db2<span class="pl-k">.</span>store(record);</pre></div>
+
+<p>internally this ends up calling <code>addDocument</code> in the underlying <em>Lucene</em> <code>IndexWriter</code>.</p>
+
+<h4>
+<a id="delete" class="anchor" href="#delete" aria-hidden="true"><span class="octicon octicon-link"></span></a>Delete</h4>
+
+<p>The API enables to delete a set of records using <code>delete(Query q)</code>.</p>
+
+<blockquote>
+<p>NOTE: Due to Lucene facet internals, categories are never deleted from the taxonomy index, despite of being orphan.</p>
+</blockquote>
+
+<h4>
+<a id="commit" class="anchor" href="#commit" aria-hidden="true"><span class="octicon octicon-link"></span></a>Commit</h4>
+
+<p>Previous operations (store and delete) are not (and won't ever be) visible until <code>commit()</code> is called. Underlying seachers and writers are released, to be lazily created in further read or write operations.</p>
+
+<h4>
+<a id="optimization" class="anchor" href="#optimization" aria-hidden="true"><span class="octicon octicon-link"></span></a>Optimization</h4>
+
+<p>Databases can be optimized in order to achieve a better performance by using <code>optimize()</code>. This method triggers a highly costly (in terms of free disk space needs and computation) merging of the <em>Lucene</em> index segments into a single one. </p>
+
+<p>Nevertheless, this operation is useful for immutable databases, that can be once optimized prior its usage.</p>
+
+<h3>
+<a id="read-operations" class="anchor" href="#read-operations" aria-hidden="true"><span class="octicon octicon-link"></span></a>Read operations</h3>
+
+<p>Two kind of read operations can be performed, both supporting a <a href="src/main/java/org/brutusin/fleadb/query">Query</a> argument, that defines the search criteria.</p>
+
+<h4>
+<a id="record-queries" class="anchor" href="#record-queries" aria-hidden="true"><span class="octicon octicon-link"></span></a>Record queries</h4>
+
+<p>Record queries can be <a href="http://en.wikipedia.org/wiki/Pagination#Pagination_in_web_content">paginated</a> and the ordering of the results can be specified via a <a href="src/main/java/org/brutusin/fleadb/sort/Sort.java">Sort</a> argument.</p>
+
+<ul>
+<li><code>public E getSingleResult(final Query q)</code></li>
+<li><code>public Paginator&lt;E&gt; query(final Query q)</code></li>
+<li><code>public Paginator&lt;E&gt; query(final Query q, final Sort sort)</code></li>
+</ul>
+
+<h4>
+<a id="facet-queries" class="anchor" href="#facet-queries" aria-hidden="true"><span class="octicon octicon-link"></span></a>Facet queries</h4>
+
+<p><a href="src/main/java/org/brutusin/fleadb/facet/FacetResponse.java"><code>FacetResponse</code></a> represents the faceting info returned by the database.</p>
+
+<ul>
+<li><code>public List&lt;FacetResponse&gt; getFacetValues(final Query q, FacetMultiplicities activeFacets)</code></li>
+<li><code>public List&lt;FacetResponse&gt; getFacetValues(final Query q, int maxFacetValues)</code></li>
+<li><code>public List&lt;FacetResponse&gt; getFacetValuesStartingWith(String facetName, String prefix, Query q, int max)</code></li>
+<li><code>public int getNumFacetValues(Query q, String facetName)</code></li>
+<li><code>public double getFacetValueMultiplicity(String facetName, String facetValue, Query q)</code></li>
+</ul>
+
+<p>Faceting is provided by <a href="http://lucene.apache.org/core/4_10_3/facet/index.html">lucene-facet</a>.</p>
+
+<h3>
+<a id="closing" class="anchor" href="#closing" aria-hidden="true"><span class="octicon octicon-link"></span></a>Closing</h3>
+
+<p>Databases must be closed after its usage, via <code>close()</code> method in order to free the resources and locks hold. Closing a database makes it no longer usable.</p>
+
+<h2>
+<a id="threading-issues" class="anchor" href="#threading-issues" aria-hidden="true"><span class="octicon octicon-link"></span></a>Threading issues</h2>
+
+<p>Both implementations are thread safe and can be shared across multiple threads.</p>
+
+<h2>
+<a id="index-structure" class="anchor" href="#index-structure" aria-hidden="true"><span class="octicon octicon-link"></span></a>Index structure</h2>
+
+<p>Persistent <em>flea-db</em> databases create the following index structure: </p>
+
+<pre><code>/flea-db/
+|-- flea.json
+|-- record-index
+|   |-- ...
+|-- taxonomy-index
+|   |-- ...
+</code></pre>
+
+<p>being <code>flea.json</code> the database descriptor containing its schema, and being <code>record-index</code> and <code>taxonomy-index</code> subfolders the underlying <em>Lucene</em> index structures.</p>
+
+<h2>
+<a id="acid-properties" class="anchor" href="#acid-properties" aria-hidden="true"><span class="octicon octicon-link"></span></a>ACID properties</h2>
+
+<p><code>flea-db</code> offers the following <a href="http://en.wikipedia.org/wiki/ACID">ACID</a> properties, inherited from <em>Lucene</em> ones:</p>
+
+<ul>
+<li>
+<strong>Atomicity:</strong> When changes are performed, and then committed, either all (if the commit succeeds) or none (if the commit fails) of them will be visible.</li>
+<li>
+<strong>Consistency:</strong> if the computer or OS crashes, or the JVM crashes or is killed, or power is lost, indexes will remain intact (ie, not corrupt).</li>
+<li>
+<strong>Isolation:</strong> Changes performed are not visible until committed. </li>
+<li>
+<strong>Durability:</strong> In case of a persistent database, when the commit returns, all changes have been written to disk. If the JVM crashes, all changes will still be present in the index, despite of not the database not being properly closed.</li>
+</ul>
+
+<h2>
+<a id="examples" class="anchor" href="#examples" aria-hidden="true"><span class="octicon octicon-link"></span></a>Examples:</h2>
+
+<p><strong>Generic API:</strong></p>
+
+<div class="highlight highlight-source-java"><pre><span class="pl-c">// Generic interaction with a previously created database</span>
+<span class="pl-k">FleaDB&lt;<span class="pl-smi">JsonNode</span>&gt;</span> db <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">GenericFleaDB</span>(indexFolder);
+
+<span class="pl-c">// Store records</span>
+<span class="pl-smi">JsonNode</span> json <span class="pl-k">=</span> <span class="pl-smi">JsonCodec</span><span class="pl-k">.</span>getInstance<span class="pl-k">.</span>parse(<span class="pl-s"><span class="pl-pds">"</span>...<span class="pl-pds">"</span></span>);
+db<span class="pl-k">.</span>store(json);
+db<span class="pl-k">.</span>commit();
+
+<span class="pl-c">// Query records</span>
+<span class="pl-smi">Query</span> q <span class="pl-k">=</span> <span class="pl-smi">Query</span><span class="pl-k">.</span>createTermQuery(<span class="pl-s"><span class="pl-pds">"</span>$.id<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>0<span class="pl-pds">"</span></span>);
+<span class="pl-k">Paginator&lt;<span class="pl-smi">JsonRecord</span>&gt;</span> paginator <span class="pl-k">=</span> db<span class="pl-k">.</span>query(q);
+<span class="pl-k">int</span> totalPages <span class="pl-k">=</span> paginator<span class="pl-k">.</span>getTotalPages(pageSize);
+<span class="pl-k">for</span> (<span class="pl-k">int</span> i <span class="pl-k">=</span> <span class="pl-c1">1</span>; i <span class="pl-k">&lt;=</span> totalPages; i<span class="pl-k">++</span>) {
+    <span class="pl-k">List&lt;<span class="pl-smi">JsonRecord</span>&gt;</span> page <span class="pl-k">=</span> paginator<span class="pl-k">.</span>getPage(i, pageSize);
+    <span class="pl-k">for</span> (<span class="pl-k">int</span> j <span class="pl-k">=</span> <span class="pl-c1">0</span>; j <span class="pl-k">&lt;</span> page<span class="pl-k">.</span>size(); j<span class="pl-k">++</span>) {
+        <span class="pl-smi">JsonRecord</span> json <span class="pl-k">=</span> page<span class="pl-k">.</span>get(j);
+        <span class="pl-smi">System</span><span class="pl-k">.</span>out<span class="pl-k">.</span>println(json);
+    }
+}
+db<span class="pl-k">.</span>close();</pre></div>
+
+<p><strong>Strong-typed API:</strong>  </p>
+
+<div class="highlight highlight-source-java"><pre><span class="pl-c">// Create object database</span>
+<span class="pl-k">FleaDB&lt;<span class="pl-smi">Record</span>&gt;</span> db <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">ObjectFleaDB</span>(indexFolder, <span class="pl-smi">Record</span><span class="pl-k">.</span>class);
+
+<span class="pl-c">// Store records</span>
+<span class="pl-k">for</span> (<span class="pl-k">int</span> i <span class="pl-k">=</span> <span class="pl-c1">0</span>; i <span class="pl-k">&lt;</span> <span class="pl-c1">REC_NO</span>; i<span class="pl-k">++</span>) {
+    <span class="pl-smi">Record</span> r <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">Record</span>();
+    <span class="pl-c">// ... populate record</span>
+    db<span class="pl-k">.</span>store(r);
+}
+db<span class="pl-k">.</span>commit();
+
+<span class="pl-c">// Query records</span>
+<span class="pl-smi">Query</span> q <span class="pl-k">=</span> <span class="pl-smi">Query</span><span class="pl-k">.</span>createTermQuery(<span class="pl-s"><span class="pl-pds">"</span>$.id<span class="pl-pds">"</span></span>, <span class="pl-s"><span class="pl-pds">"</span>0<span class="pl-pds">"</span></span>);
+<span class="pl-k">Paginator&lt;<span class="pl-smi">Record</span>&gt;</span> paginator <span class="pl-k">=</span> db<span class="pl-k">.</span>query(q);
+<span class="pl-k">int</span> totalPages <span class="pl-k">=</span> paginator<span class="pl-k">.</span>getTotalPages(pageSize);
+<span class="pl-k">for</span> (<span class="pl-k">int</span> i <span class="pl-k">=</span> <span class="pl-c1">1</span>; i <span class="pl-k">&lt;=</span> totalPages; i<span class="pl-k">++</span>) {
+    <span class="pl-k">List&lt;<span class="pl-smi">Record</span>&gt;</span> page <span class="pl-k">=</span> paginator<span class="pl-k">.</span>getPage(i, pageSize);
+    <span class="pl-k">for</span> (<span class="pl-k">int</span> j <span class="pl-k">=</span> <span class="pl-c1">0</span>; j <span class="pl-k">&lt;</span> page<span class="pl-k">.</span>size(); j<span class="pl-k">++</span>) {
+        <span class="pl-smi">Record</span> r <span class="pl-k">=</span> page<span class="pl-k">.</span>get(j);
+        <span class="pl-smi">System</span><span class="pl-k">.</span>out<span class="pl-k">.</span>println(r);
+    }
+}
+db<span class="pl-k">.</span>close();</pre></div>
+
+<p>See available <a href="src/test/java/org/brutusin/fleadb/impl/">test classes</a> for more examples.</p>
+
+<h2>
+<a id="main-stack" class="anchor" href="#main-stack" aria-hidden="true"><span class="octicon octicon-link"></span></a>Main stack</h2>
+
+<p>This module could not be possible without:</p>
+
+<ul>
+<li>
+<a href="http://lucene.apache.org/core/">Apache Lucene</a>.</li>
+<li>The following <a href="https://github.com/brutusin/json-codec-jackson">json-codec-jackson</a> dependencies:
+
+<ul>
+<li>
+<a href="https://github.com/FasterXML/jackson">FasterXML/jackson stack</a>: The underlying JSON stack.</li>
+<li>
+<a href="https://github.com/FasterXML/jackson-module-jsonSchema">com.fasterxml.jackson.module:jackson-module-jsonSchema</a>: For java class to JSON schema mapping.</li>
+<li>
+<a href="https://github.com/fge/json-schema-validator">com.github.fge:json-schema-validator</a>: For validation against a JSON schema.</li>
+</ul>
+</li>
+</ul>
+
+<h2>
+<a id="lucene-version" class="anchor" href="#lucene-version" aria-hidden="true"><span class="octicon octicon-link"></span></a>Lucene version</h2>
+
+<p><code>4.10.3</code> (Dec, 2014)</p>
+
+<h2>
+<a id="support-bugs-and-requests" class="anchor" href="#support-bugs-and-requests" aria-hidden="true"><span class="octicon octicon-link"></span></a>Support, bugs and requests</h2>
+
+<p><a href="https://github.com/brutusin/flea-db/issues">https://github.com/brutusin/flea-db/issues</a></p>
+
+<h2>
+<a id="authors" class="anchor" href="#authors" aria-hidden="true"><span class="octicon octicon-link"></span></a>Authors</h2>
+
+<ul>
+<li>Ignacio del Valle Alles (<a href="https://github.com/idelvall/">https://github.com/idelvall/</a>)</li>
+</ul>
+
+<p>Contributions are always welcome and greatly appreciated!</p>
+
+<h2>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h2>
+
+<p>Apache License, Version 2.0
+<a href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a></p>
+      </section>
+
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><![endif]-->
+    
+  </body>
+</html>
