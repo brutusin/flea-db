@@ -88,7 +88,7 @@ Basically an `ObjectFleaDB` delegates all its functionality to a wrapped `Generi
 
 ## Schema
 ###JSON SPI
-As cited before, this library makes use of the [`org.brutusin:json`](https://github.com/brutusin/json), so a JSON service provider like [`json-provider`](https://github.com/brutusin/json-provider) is needed at runtime. The choosen provider will determine JSON serialization, validation, parsing, schema generation and expression semantics.
+This library makes use of the [`org.brutusin:json`](https://github.com/brutusin/json), so a JSON service provider like [`json-provider`](https://github.com/brutusin/json-provider) is needed at runtime. The choosen provider will determine JSON serialization, validation, parsing, schema generation and expression semantics.
 
 ###JSON Schema extension
 Standard JSON schema specification has been extended to declare indexable properties (`"index":"index"` and `"index":"facet"` options). See [annotations section](#annotations) for more details.
