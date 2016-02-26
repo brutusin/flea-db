@@ -118,7 +118,7 @@ See [documentation in JSON SPI](https://github.com/brutusin/json/tree/master/src
 ###Indexed fields nomenclature
 Databases are self descriptive, they provide information of their schema and indexed fields (via [`Schema`](src/main/java/org/brutusin/fleadb/Schema.java)). 
 
-Field semantics are inherited from the expression semantics defined in the [`org.brutusin:json-provider`](https://github.com/brutusin/json-provider/blob/master/README.md#expression-dsl)
+Field semantics are inherited from the expression semantics defined in the schema specification [`http://brutusin.org/json/json-schema-spec`](https://github.com/brutusin/json/blob/master/schema.extension.md#path-expressions)
 
 ### Indexation values
 Supose `JsonNode node` to be stored and let `fieldId` be the expression identifying a database field, according to the previous section. 
