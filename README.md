@@ -1,4 +1,4 @@
-#org.brutusin:flea-db [![Build Status](https://api.travis-ci.org/brutusin/flea-db.svg?branch=master)](https://travis-ci.org/brutusin/flea-db) [![Maven Central Latest Version](https://maven-badges.herokuapp.com/maven-central/org.brutusin/flea-db/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.brutusin/flea-db/) 
+# org.brutusin:flea-db [![Build Status](https://api.travis-ci.org/brutusin/flea-db.svg?branch=master)](https://travis-ci.org/brutusin/flea-db) [![Maven Central Latest Version](https://maven-badges.herokuapp.com/maven-central/org.brutusin/flea-db/badge.svg)](https://maven-badges.herokuapp.com/maven-central/org.brutusin/flea-db/) 
 
 A java library for creating standalone, portable, schema-full object databases supporting [pagination](http://en.wikipedia.org/wiki/Pagination#Pagination_in_web_content) and [faceted search](http://en.wikipedia.org/wiki/Faceted_search), and offering strong-typed and generic APIs.
 
@@ -46,14 +46,14 @@ Built on top of [Apache Lucene](http://lucene.apache.org/core/).
   - [Authors](#authors)
   - [License](#license)
 
-##Motivation
+## Motivation
 * Create a library with a very simple API, self-descriptive with high robustness aimed at indexing objects and providing advanced search capabilities, pagination and faceted search. 
 * Originally born with the purpose of indexing raw data files, and (almost) steady data sets.
 * *Lucene* is an extense and powerful low level library, but its API is not very easy to understand.
 * Putting schemas into play, self-description can be used to simplify API (fields type), to provide strong validation mechanisms, and to enable the creation of flexible and generic downstream components.
 * *Lucene* has a lot of experimental APIs that may (and use to) change in time. This library adds a level of indirection. providing a stable high level interface. Upgrades in the underlying *Lucene* version are absorved by *flea-db*.
 
-##Maven dependency 
+## Maven dependency 
 ```xml
 <dependency>
     <groupId>org.brutusin</groupId>
@@ -64,7 +64,7 @@ Click [here](http://search.maven.org/#search%7Cga%7C1%7Cg%3A%22org.brutusin%22%2
 
 If you are not using maven and need help you can ask [here](https://github.com/brutusin/flea-db/issues).
 
-##APIs
+## APIs
 All `flea-db` functionality is defined by [`FleaDB`](src/main/java/org/brutusin/fleadb/FleaDB.java) interface. 
 
 The library provides two implementations for it:
@@ -72,7 +72,7 @@ The library provides two implementations for it:
 1. A low-level generic implementation [`GenericFleaDB`](src/main/java/org/brutusin/fleadb/impl/GenericFleaDB.java).
 2. A high-level strong-typed implementation [`ObjectFleaDB`](src/main/java/org/brutusin/fleadb/impl/ObjectFleaDB.java) built on top of the previous one.
 
-###GenericFleaDB
+### GenericFleaDB
 [`GenericFleaDB`](src/main/java/org/brutusin/fleadb/impl/GenericFleaDB.java) is the lowest level *flea-db* implementation that defines the database schema using a JSON schema and stores and indexes records of type [`JsonNode`](https://github.com/brutusin/json/tree/master/src/main/java/org/brutusin/json/spi/JsonNode.java). It uses *Apache Lucene* APIs and [`org.brutusin:json` SPI](https://github.com/brutusin/json) to maintain two different indexes (one for the terms and other for the taxonomy, see [index structure](#index-structure)), hyding the underlying complexity from the user perspective.
 
 This is how it works:
@@ -81,16 +81,16 @@ This is how it works:
 * **On commit**: Underlying index and taxonomy writters are commited and searchers are refreshed to reflect the changes.
 * **On querying**: The [`Query`](src/main/java/org/brutusin/fleadb/query) and [`Sort`](src/main/java/org/brutusin/fleadb/sort/Sort.java) objects are transformed into terms understandable by *Lucene* making use of the database schema. The returned [paginator](src/main/java/org/brutusin/fleadb/pagination) is basically a wrapper around the underlying luecene `IndexSearcher` and `Query` objects that lazily (on demand) performs searches to the index.
 
-###ObjectFleaDB
+### ObjectFleaDB
 [`ObjectFleaDB`](src/main/java/org/brutusin/fleadb/impl/ObjectFleaDB.java) is built on top of `GenericFleaDB`.
 
 Basically an `ObjectFleaDB` delegates all its functionality to a wrapped `GenericFleaDB` instance, making use of `org.brutusin:json` to perform transformations `POJO<->JsonNode` and `Class<->JsonSchema`. This is the reason why all `flea-db` databases can be used with `GenericFleaDB`.
 
 ## Schema
-###JSON SPI
+### JSON SPI
 This library makes use of the [`org.brutusin:json`](https://github.com/brutusin/json), so a JSON service provider like [`json-provider`](https://github.com/brutusin/json-provider) is needed at runtime. The choosen provider will determine JSON serialization, validation, parsing, schema generation and expression semantics.
 
-###JSON Schema extension
+### JSON Schema extension
 Standard JSON schema specification has been extended to declare indexable properties (`"index":"index"` and `"index":"facet"` options). 
 
 See [`http://brutusin.org/json/json-schema-spec`](http://brutusin.org/json/json-schema-spec) for more details.
@@ -114,10 +114,10 @@ Example:
 * `"index":"index"`: Means that the property is indexed by *Lucene* under a field with name set according to the rules explained in [nomenclature section](#indexed-fields-nomenclature).
 * `"index":"facet"`: Means that the property is indexed as in the previous case, but also a facet is created with this field name.
 
-###Annotations
+### Annotations
 See [documentation in JSON SPI](https://github.com/brutusin/json/tree/master/src/main/java/org/brutusin/json/annotations) for supported annotations used in the strong-typed scenario.
 
-###Indexed fields nomenclature
+### Indexed fields nomenclature
 Databases are self descriptive, they provide information of their schema and indexed fields (via [`Schema`](src/main/java/org/brutusin/fleadb/Schema.java)). 
 
 Field semantics are inherited from the expression semantics defined in the schema specification [`http://brutusin.org/json/json-schema-spec`](https://github.com/brutusin/json/blob/master/schema.extension.md#path-expressions)
@@ -142,7 +142,7 @@ Then, the following rules apply to extract index and facet values for that field
 |Object|each of its property names|each of its property names
 |Array|recurse for each of its elements|recurse for each of its elements
 
-##Usage
+## Usage
 ### Database persistence
 Databases can be created in RAM memory or in disk, depending on the addressed problem characteristics (performance, dataset size, indexation time ...).
 
@@ -207,10 +207,10 @@ Faceting is provided by [lucene-facet](http://lucene.apache.org/core/4_10_3/face
 ### Closing
 Databases must be closed after its usage, via `close()` method in order to free the resources and locks hold. Closing a database makes it no longer usable.
 
-##Threading issues
+## Threading issues
 Both implementations are thread safe and can be shared across multiple threads.
 
-##Index structure
+## Index structure
 Persistent *flea-db* databases create the following index structure: 
 ```
 /flea-db/
@@ -222,7 +222,7 @@ Persistent *flea-db* databases create the following index structure:
 ```
 being `flea.json` the database descriptor containing its schema, and being `record-index` and `taxonomy-index` subfolders the underlying *Lucene* index structures.
 
-##ACID properties
+## ACID properties
 `flea-db` offers the following [ACID](http://en.wikipedia.org/wiki/ACID) properties, inherited from *Lucene* ones:
 
 * **Atomicity:** When changes are performed, and then committed, either all (if the commit succeeds) or none (if the commit fails) of them will be visible.
@@ -230,7 +230,7 @@ being `flea.json` the database descriptor containing its schema, and being `reco
 * **Isolation:** Changes performed are not visible until committed. 
 * **Durability:** In case of a persistent database, when the commit returns, all changes have been written to disk. If the JVM crashes, all changes will still be present in the index, despite of not the database not being properly closed.
 
-##Examples:
+## Examples:
 **Generic API:**
 ```java 
 // Generic interaction with a previously created database
@@ -284,7 +284,7 @@ db.close();
 
 See available [test classes](src/test/java/org/brutusin/fleadb/impl/) for more examples.
 
-##Main stack
+## Main stack
 This module could not be possible without:
 * [Apache Lucene](http://lucene.apache.org/core/).
 * The following [json-codec-jackson](https://github.com/brutusin/json-codec-jackson) dependencies:
@@ -292,7 +292,7 @@ This module could not be possible without:
   * [com.fasterxml.jackson.module:jackson-module-jsonSchema](https://github.com/FasterXML/jackson-module-jsonSchema): For java class to JSON schema mapping.
   * [com.github.fge:json-schema-validator](https://github.com/fge/json-schema-validator): For validation against a JSON schema.
 
-##Lucene version
+## Lucene version
 `4.10.3` (Dec, 2014)
 
 ## Support, bugs and requests
@@ -304,7 +304,7 @@ https://github.com/brutusin/flea-db/issues
 
 Contributions are always welcome and greatly appreciated!
 
-##License
+## License
 Apache License, Version 2.0
 http://www.apache.org/licenses/LICENSE-2.0
 
